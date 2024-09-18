@@ -2,6 +2,26 @@
 
 {% block content %}
 
-    <h1>Admin</h1>
+    <br/>
+    <h1 class="light-title">Admin</h1>
+    <br/>
+    <div class="btn-group">
+        <a href="{{ url_for('admin') }}" class="btn btn-dark light" aria-current="page">Users</a>
+        <a href="#" class="btn btn-light">Posts</a>
+        <a href="#" class="btn btn-light">Comments</a>
+    </div>
+    <br/><br/>
+
+    <form class="d-flex" role="search">
+        <input class="form-control me-2" type="search" placeholder="Search for Users" aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">Search</button>
+    </form>
+    <br/><br/><br/>
+
+    <div class="shadow p-3 mb-5 bg-body-tertiary rounded">
+        <h3>List of users...</h3>
+        <br/><br/><br/>
+    </div>
+
 
 {% endblock %}

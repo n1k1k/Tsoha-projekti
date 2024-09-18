@@ -2,10 +2,6 @@
 
 {% block content %}
 
-    <br/>
-    <h1 class="light-title">Home Page</h1>
-    <br/><br/>
-
     <!--Example Post-->
     <div class="card">
         <div class="card-body">
@@ -21,9 +17,11 @@
             </p>
         
         <small>Time posted</small>
-        <br/><br/>
-        <a href="{{ url_for('post') }}" class="btn btn-outline-secondary">View Post</a>
         </div>
+    </div>
+    <br/><br/>
+    <div class="text-center">
+        <a href="{{ url_for('index') }}" class="btn btn-outline-dark btn-lg btn-block">Go Back</a>
     </div>
 
 {% endblock %}

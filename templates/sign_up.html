@@ -2,6 +2,57 @@
 
 {% block content %}
 
-    <h1>Sign Up</h1>
+    {% for message in get_flashed_messages() %}
+        <div class="alert alert-secondary" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    {% endfor %}
+
+    {% if name %}
+        <h1>Hey {{ username }}</h1>
+    {% else %}
+        <br/><br/>
+        <div class="modal-content rounded-4 shadow">
+            <div class="modal-header p-5 pb-4 border-bottom-0">
+              <h1 class="fw-bold mb-0 fs-2">Sign up for free</h1>
+            </div>
+      
+            <div class="modal-body p-5 pt-0">
+              <form method="POST">
+                {{ form.hidden_tag() }}
+
+                <div class="form mb-3">
+                  {{ form.username.label(class="form-label") }}
+                  {{ form.username(class="form-control") }}
+                </div>
+
+                <div class="form mb-3">
+                    {{ form.email.label(class="form-label")}}
+                    {{ form.email(class="form-control") }}
+                </div>
+                <br/>
+                <div class="form mb-3">
+                    
+                    {{ form.password_hash.label(class="form-label")}}
+                    {{ form.password_hash(class="form-control") }}
+                </div>
+                <div class="form mb-3">
+                    
+                    {{ form.confirm_password_hash.label(class="form-label")}}
+                    {{ form.confirm_password_hash(class="form-control") }}
+                </div>
+                {{ form.submit(class="w-100 mb-2 btn btn-lg rounded-3 btn-primary") }}
+                <small class="text-body-secondary">By clicking Sign up, you agree to the terms of use.</small>
+              </form>
+            </div>
+        </div>
+
+    
+        
+    {% endif %}
+        
 
 {% endblock %}

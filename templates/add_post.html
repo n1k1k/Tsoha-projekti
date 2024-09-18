@@ -2,6 +2,34 @@
 
 {% block content %}
 
-    <h1>Add post</h1>
+    {% for message in get_flashed_messages() %}
+        <div class="alert alert-secondary" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    {% endfor %}
+
+    {% if title %}
+        <h1>{{ title }}</h1>
+        <p>{{ content }}</p>
+    {% else %}
+        <h1 class="light-title">Create new post...</h1>
+        <div class="shadow p-3 mb-5 bg-body-tertiary rounded">
+            <form method="POST">
+                {{ form.hidden_tag() }}
+                <br/>
+                {{ form.title.label(class="form-label") }}
+                {{ form.title(class="form-control") }}
+                <br/>
+                {{ form.content.label(class="form-label") }}
+                {{ form.content(class="form-control") }}
+                <br/>
+                {{ form.submit(class="btn btn-secondary") }}
+            </form>
+        </div>
+
+    {% endif %}
 
 {% endblock %}

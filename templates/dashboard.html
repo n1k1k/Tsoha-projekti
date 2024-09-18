@@ -2,6 +2,31 @@
 
 {% block content %}
 
-    <h1>Dashboard</h1>
+    <br/>
+    <h1 class="light-title">Your Dashboard</h1>
+    <br/>
+
+    <div class="card text-center">
+        <div class="card-header">
+          <ul class="nav nav-pills card-header-pills">
+            <li class="nav-item">
+              <a class="nav-link active" href="#">Account information</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Your Posts</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Your Comments</a>
+            </li>
+
+          </ul>
+        </div>
+        <div class="card-body">
+          <p class="card-text">Username:</p>
+          <p class="card-text">Email:</p>
+          <p class="card-text">You have been a member scince:</p>
+          <a href="{{ url_for('edit_user')}}" class="btn btn-outline-dark">Edit</a>
+        </div>
+      </div>
 
 {% endblock %}
