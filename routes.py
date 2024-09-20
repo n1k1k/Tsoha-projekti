@@ -1,6 +1,8 @@
 from app import app
-from flask import render_template, flash
+import users
+from flask import render_template, flash, redirect
 from forms import SignUpForm, LoginForm, PostForm
+from werkzeug.security import generate_password_hash
 
 
 @app.route("/")
@@ -48,7 +50,6 @@ def login():
         #query database (check that user exists)
         #check password hash
 
-
         #clear data
         form.username.data = ""
         form.name.data = ""
@@ -62,25 +63,24 @@ def sign_up():
     username = None
     form = SignUpForm()
 
-    #Hash password
-
     if form.validate_on_submit():
-        #Check that email is not taken
-
-        #Add data to db
-
-        #test
         username = form.username.data
+        email = form.email.data
+        password_hash = generate_password_hash(form.password.data, 'scrypt')
 
-        #clear data
         form.username.data = ""
         form.email.data = ""
-        form.password_hash = ""
-        form.confirm_password_hash = ""
-    
+        form.password.data = ""
+
+        if not users.signup(username, email, password_hash):
+            flash("Error! Try Again")
+            return render_template("sign_up.html", form=form)
+        
         flash("User added")
+        return redirect("/")
     
-    return render_template("edit_user.html", form=form, username=username)
+    return render_template("sign_up.html", form=form)
+
 
 
 @app.route("/edit", methods=["GET", "POST"])

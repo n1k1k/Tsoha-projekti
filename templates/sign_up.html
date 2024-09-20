@@ -11,7 +11,7 @@
         </div>
     {% endfor %}
 
-    {% if name %}
+    {% if username %}
         <h1>Hey {{ username }}</h1>
     {% else %}
         <br/><br/>
@@ -36,13 +36,13 @@
                 <br/>
                 <div class="form mb-3">
                     
-                    {{ form.password_hash.label(class="form-label")}}
-                    {{ form.password_hash(class="form-control") }}
+                    {{ form.password.label(class="form-label") }}
+                    {{ form.password(class="form-control") }}
                 </div>
                 <div class="form mb-3">
                     
-                    {{ form.confirm_password_hash.label(class="form-label")}}
-                    {{ form.confirm_password_hash(class="form-control") }}
+                    {{ form.confirm_password.label(class="form-label")}}
+                    {{ form.confirm_password(class="form-control") }}
                 </div>
                 {{ form.submit(class="w-100 mb-2 btn btn-lg rounded-3 btn-primary") }}
                 <small class="text-body-secondary">By clicking Sign up, you agree to the terms of use.</small>
