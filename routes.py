@@ -1,6 +1,6 @@
 from app import app
 import users
-from flask import render_template, flash, redirect
+from flask import render_template, flash, redirect, url_for
 from forms import SignUpForm, LoginForm, PostForm
 from werkzeug.security import generate_password_hash
 
@@ -43,20 +43,27 @@ def admin():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     form = LoginForm()
-    #Check that email is not taken
-    #Hash password
 
     if form.validate_on_submit():
-        #query database (check that user exists)
-        #check password hash
+        email = form.email.data
+        password = form.password.data
 
-        #clear data
-        form.username.data = ""
-        form.name.data = ""
         form.email.data = ""
-        form.password_hash = ""
+        form.password.data = ""
+
+        if not users.login(email, password):
+            flash('Something went wrong. Try Again!')
+        else:
+            return redirect(url_for('dashboard'))
+
     
     return render_template("login.html", form=form)
+
+@app.route("/logout", methods=["GET", "POST"])
+def logout():
+    users.logout()
+    flash("You have been Logged out!")
+    return redirect(url_for("login"))
 
 @app.route("/sign-up", methods=["GET", "POST"])
 def sign_up():
@@ -66,18 +73,18 @@ def sign_up():
     if form.validate_on_submit():
         username = form.username.data
         email = form.email.data
-        password_hash = generate_password_hash(form.password.data, 'scrypt')
+        password = form.password.data
 
         form.username.data = ""
         form.email.data = ""
         form.password.data = ""
 
-        if not users.signup(username, email, password_hash):
+        if not users.signup(username, email, password):
             flash("Error! Try Again")
             return render_template("sign_up.html", form=form)
-        
-        flash("User added")
-        return redirect("/")
+        else:
+            flash("Welcome! You are now logged in and ready to start posting.")
+            return redirect(url_for("dashboard"))
     
     return render_template("sign_up.html", form=form)
 
