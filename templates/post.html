@@ -1,8 +1,15 @@
 {% extends "base.html" %}
 
 {% block content %}
+    {% for message in get_flashed_messages() %}
+        <div class="alert alert-secondary" role="alert">
+            {{ message }}
+            <!--<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>-->
+        </div>
+    {% endfor %}
 
-    <!--Example Post-->
     <div class="card">
         <div class="card-header">
           @{{ post.author }}
@@ -13,7 +20,11 @@
           <br/>
   
           <small>{{ post.date_added }}</small>
-          <br/>
+          <br/><br/>
+          {% if session.id == post.author_id %}
+            <a href="{{ url_for('edit_post', id=post.id) }}" class="btn btn-outline-dark">Edit</a>
+        
+          {% endif %}
         </div>
     </div><br/><br/>
 

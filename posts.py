@@ -14,6 +14,16 @@ def add_post(title, content, author, author_id):
         return False  
     return True
 
+def edit_post(id, title, content):
+    try:   
+        sql = """UPDATE post SET title = :title, content = :content WHERE id = :id"""
+        db.session.execute(text(sql), {"title":title, "content":content, "id":id})
+        db.session.commit()
+    except:
+        return False
+    return True
+
+
 def get_posts():
     sql = "SELECT id, title, content, author, author_id,  date_added FROM post"
     result = db.session.execute(text(sql))

@@ -48,6 +48,34 @@ def post(id):
     result = posts.get_post(id)
     return render_template("post.html", post=result)
 
+@app.route("/edit-posts/<int:id>", methods=["GET", "POST"])
+def edit_post(id):
+    post_to_edit = posts.get_post(id)
+    form = PostForm()
+
+    if form.validate_on_submit():
+        title = form.title.data
+        content = form.content.data
+
+        form.title.data = ""
+        form.content.data = ""
+
+        if not posts.edit_post(id, title, content):
+            flash("Error! Try Again")
+            return render_template("add_post.html", form=form)
+        else:
+            flash("Post edited Succesfully!")
+            return redirect(url_for("post", id=id))
+
+    if post_to_edit.author_id == session["id"]:
+        form.title.data = post_to_edit.title
+        form.content.data = post_to_edit.content
+        return render_template("edit_post.html", form=form)
+    
+    return render_template("edit_post.html", form=form)
+
+
+
 @app.route("/dashboard")
 def dashboard():
     return render_template("dashboard.html")
