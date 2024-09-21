@@ -2,35 +2,23 @@
 
 {% block content %}
 
-    {% for message in get_flashed_messages() %}
-    <div class="alert alert-secondary" role="alert">
-        {{ message }}
-    <!--<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-        </button>-->
-    </div>
-    {% endfor %}
-
     <!--Example Post-->
     <div class="card">
-        <div class="card-body">
-            @username
-        <h5 class="card-title">Example Title</h5>
-        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
-            sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut 
-            aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in 
-            voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint 
-            occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit 
-            anim id est laborum.
-            </p>
-        
-        <small>Time posted</small>
+        <div class="card-header">
+          @{{ post.author }}
         </div>
-    </div>
-    <br/><br/>
+        <div class="card-body">
+          <h5 class="card-title">{{ post.title }}</h5>
+          <p class="card-text">{{ post.content }}</p>
+          <br/>
+  
+          <small>{{ post.date_added }}</small>
+          <br/>
+        </div>
+    </div><br/><br/>
+
     <div class="text-center">
-        <a href="{{ url_for('index') }}" class="btn btn-outline-dark btn-lg btn-block">Go Back</a>
+        <a href="{{ url_for('index') }}" class="btn btn-dark btn-lg btn-block">Return to Home Page</a>
     </div>
 
 {% endblock %}

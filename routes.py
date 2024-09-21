@@ -1,35 +1,52 @@
 from app import app
 import users
-from flask import render_template, flash, redirect, url_for
-from forms import SignUpForm, LoginForm, PostForm
+import posts
+from flask import session, render_template, flash, redirect, url_for
+from forms import SignUpForm, LoginForm, PostForm, EditUserForm
 from werkzeug.security import generate_password_hash
 
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    result = posts.get_posts()
+    return render_template("index.html", posts = result)
+
 
 @app.route("/add-post", methods=["GET", "POST"])
 def add_post():
     form = PostForm()
-    title = None
-    content = None
+
+    try:
+        session["username"]
+        logged_in = True
+    except:
+        logged_in = False
 
     if form.validate_on_submit():
+        if logged_in:
+            title = form.title.data
+            content = form.title.data
+            author = session["username"]
+            author_id = session["id"]
 
-        #testing form
-        title = form.title.data
-        content = form.content.data
-
-        #clear data
-        form.title.data = ""
-        form.content.data = ""
+            form.title.data = ""
+            form.content.data = ""
+            
+            if not posts.add_post(title, content, author, author_id):
+                flash("Error! Try Again")
+                return render_template("add_post.html", form=form)
+            else:
+                flash("Post added Succesfully!")
+                return redirect(url_for("index"))
+        elif not logged_in:
+            flash("Please login!")
     
-    return render_template("add_post.html", form=form, title=title, content=content)
+    return render_template("add_post.html", form=form)
 
-@app.route("/post")
-def post():
-    return render_template("post.html")
+@app.route("/posts/<int:id>")
+def post(id):
+    result = posts.get_post(id)
+    return render_template("post.html", post=result)
 
 @app.route("/dashboard")
 def dashboard():
@@ -90,19 +107,26 @@ def sign_up():
 
 
 
-@app.route("/edit", methods=["GET", "POST"])
-def edit_user():
-    form = SignUpForm()
-
-    #check user
+"""@app.route("/edit/<int:id>", methods=["GET", "POST"])
+def edit_user(id):
+    form = EditUserForm()
+    user_to_update = users.get_user(id)
+    form.username.data = user_to_update.username
+    form.email.data = user_to_update.email
 
     if form.validate_on_submit():
-        #Add data to db
+        username = form.username.data
+        email = form.email.data
 
-        #clear data
         form.username.data = ""
         form.email.data = ""
 
-    
+        if not users.edit_user(id, username, email):
+            flash("Error")
+            return redirect(url_for("dashboard"))
+        else:
+            flash("You information was updated")
+            return render_template("dashboard.html")
 
-    return render_template("edit_user.html", form=form)
+
+    return render_template("edit_user.html", form=form)"""

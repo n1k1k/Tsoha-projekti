@@ -34,7 +34,6 @@
               <p class="card-text">Username: {{ session.username }}</p>
               <p class="card-text">Email: {{ session.email }}</p>
               <p class="card-text">You have been a member scince: {{ session.date_added }}</p>
-              <a href="{{ url_for('edit_user')}}" class="btn btn-outline-dark">Edit</a>
             </div>   
         </div>
       {% else %}

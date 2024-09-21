@@ -5,8 +5,14 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime
 from sqlalchemy.sql import text
 
+def get_user(id):
+    sql = '''SELECT * FROM "user" 
+        WHERE id=:id'''
+    result = db.session.execute(text(sql), {"id":id})
+    user = result.fetchone()
+    return user
+
 def signup(username, email, password):
-    print("test1")
     sql = 'SELECT id FROM "user" WHERE email=:email'
     result = db.session.execute(text(sql), {"email":email})
     user = result.fetchone()
@@ -55,3 +61,19 @@ def logout():
     del session["email"]
     del session["role"]
     del session["username"]
+
+"""def edit_user(id, username, email):
+    if id == session["id"]:
+        try:
+            print("1")
+            sql = "UPDATE "user" SET email = :email, username = :username WHERE id = :id"
+            db.session.execute(text(sql), {"email":email, "username":username, "id":id})
+            db.session.commit()
+            print("5")
+            session["email"] = email
+            session["username"] = username
+            return True
+        except:
+            return False
+        
+    return False"""
