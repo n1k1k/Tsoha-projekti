@@ -4,11 +4,14 @@ Sovelluksessa on viestiketjuja, jotka muodostuvat alkuperäisestä viestistä ja
 
 Sovelluksen ominaisuuksia:
 
-- Käyttäjä voi kirjautua sisään ja ulos sekä luoda uuden tunnuksen.
-- Käyttäjä näkee sovelluksen etusivulla listan viestiketjuista siten, että uusin ketju näkyy ensimmäisenä.
-- Käyttäjä voi luoda uuden viestiketjun antamalla sille otsikon ja viestin sisällön.
+:white_check_mark: = Tällä hetkellä toimivat ominaisuudet 
+
+- Käyttäjä voi kirjautua sisään ja ulos sekä luoda uuden tunnuksen :white_check_mark:
+- Käyttäjä näkee sovelluksen etusivulla listan viestiketjuista :white_check_mark: 
+- Käyttäjä voi luoda uuden viestiketjun antamalla sille otsikon ja viestin sisällön. :white_check_mark:
 - Käyttäjä voi kirjoittaa uuden kommentin olemassa olevaan viestiketjuun.
-- Käyttäjä voi poistaa itse tekemänsä viestiketjun tai kommentin.
+- Käyttäjä voi poistaa itse tekemänsä viestiketjun :white_check_mark:
+- Käyttäjä voi poistaa itse tekemänsä kommentin.
 - Käyttäjä voi etsiä kaikki viestit, joiden osana on annettu sana.
 - Ylläpitäjä voi poistaa viestiketjuja ja kommentteja.
 
