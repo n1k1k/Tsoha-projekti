@@ -23,6 +23,14 @@ def edit_post(id, title, content):
         return False
     return True
 
+def delete_post(id):
+    try:   
+        sql = "DELETE FROM post WHERE id=:id;"
+        db.session.execute(text(sql), {"id":id})
+        db.session.commit()
+    except:
+        return False
+    return True
 
 def get_posts():
     sql = "SELECT id, title, content, author, author_id,  date_added FROM post"

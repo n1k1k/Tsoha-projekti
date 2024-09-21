@@ -74,6 +74,17 @@ def edit_post(id):
     
     return render_template("edit_post.html", form=form)
 
+@app.route("/delete-post/<int:id>")
+def delete_post(id):
+    post_to_delete = posts.get_post(id)
+
+    if post_to_delete.author_id == session["id"]:
+        if not posts.delete_post(id):
+            flash("Error")
+            return render_template("post", id=id)
+        else:
+            flash("Post Deleted") 
+            return redirect("/")
 
 
 @app.route("/dashboard")
