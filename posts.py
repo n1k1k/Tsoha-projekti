@@ -37,6 +37,12 @@ def get_posts():
     result = db.session.execute(text(sql))
     posts = result.fetchall()
     return posts
+
+def get_user_posts(id):
+    sql = "SELECT id, title, content, author, author_id,  date_added FROM post WHERE author_id=:id"
+    result = db.session.execute(text(sql), {"id":id})
+    posts = result.fetchall()
+    return posts
  
 def get_post(id):
     sql = "SELECT id, title, content, author, author_id, date_added FROM post WHERE id=:id"

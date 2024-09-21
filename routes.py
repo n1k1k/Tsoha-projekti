@@ -3,7 +3,6 @@ import users
 import posts
 from flask import session, render_template, flash, redirect, url_for
 from forms import SignUpForm, LoginForm, PostForm, EditUserForm
-from werkzeug.security import generate_password_hash
 
 
 @app.route("/")
@@ -89,7 +88,15 @@ def delete_post(id):
 
 @app.route("/dashboard")
 def dashboard():
-    return render_template("dashboard.html")
+    id = session["id"]
+    result = posts.get_user_posts(id)
+    return render_template("dashboard.html", posts=result)
+
+@app.route("/dashboard/comments")
+def comments():
+    #placeholder
+    comments = []
+    return render_template("dashboard_comments.html", comments=comments)
 
 @app.route("/admin")
 def admin():
