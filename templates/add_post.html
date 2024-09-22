@@ -9,27 +9,32 @@
         <span aria-hidden="true">&times;</span>
         </button>-->
         </div>
-    {% endfor %}
-
-    {% if title %}
-        <h1>{{ title }}</h1>
-        <p>{{ content }}</p>
-    {% else %}
-        <h1 class="light-title">Create new post...</h1>
-        <div class="shadow p-3 mb-5 bg-body-tertiary rounded">
-            <form method="POST">
+    {% endfor %}<br/><br/>
+        <div class="modal-content rounded-4 shadow">
+            <div class="modal-header p-5 pb-4 border-bottom-0">
+              <h1 class="fw-bold mb-0 fs-2">Make a new post...</h1>
+            </div>
+      
+            <div class="modal-body p-5 pt-0">
+              <form method="POST">
                 {{ form.hidden_tag() }}
-                <br/>
-                {{ form.title.label(class="form-label") }}
-                {{ form.title(class="form-control") }}
-                <br/>
-                {{ form.content.label(class="form-label") }}
-                {{ form.content(class="form-control") }}
-                <br/>
-                {{ form.submit(class="btn btn-secondary") }}
-            </form>
+
+                <!--<div class="form-floating mb-3">-->
+                <div class="form mb-3">
+                    {{ form.title.label(class="form-label")}}
+                    {{ form.title(class="form-control") }}
+                </div>
+                <div class="form mb-3">
+                    
+                    {{ form.content.label(class="form-label")}}
+                    {{ form.content(class="form-control") }}
+                </div><br/>
+
+                {{ form.submit(class="w-100 mb-2 btn btn-lg rounded-3 btn-dark") }}
+                
+              </form>
+            </div>
         </div>
 
-    {% endif %}
 
 {% endblock %}

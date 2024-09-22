@@ -32,9 +32,16 @@
           <a href="{{ url_for('comments') }}" class="btn btn-light active">Your Comments</a>
         </div><br/><br/>
 
+      {% if comments %}
         {% for comment in comments %}
 
         {% endfor %}
+      {% else %}
+        <div class="text-center">
+          <br/><br/>
+          <h3 class="light-title">Looks like you haven't made any comments yet...</h3>
+        </div>
+      {% endif %}
 
       {% else %}
           <h3 class="light-title">Please login to view this page...</h3>

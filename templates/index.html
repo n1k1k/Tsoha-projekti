@@ -10,11 +10,12 @@
       </button>-->
   </div>
   {% endfor %}
-
+  
     <br/>
-    <h1 class="light-title">Home Page</h1>
-    <br/><br/>
-
+    {% if not session.username %}
+      {% include "jumbotron.html" %}<br/><br/>
+    {% endif %}
+    
     {% for post in posts %}
     <div class="card">
         <div class="card-header">

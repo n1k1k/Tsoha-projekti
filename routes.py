@@ -88,8 +88,11 @@ def delete_post(id):
 
 @app.route("/dashboard")
 def dashboard():
-    id = session["id"]
-    result = posts.get_user_posts(id)
+    try:
+        id = session["id"]
+        result = posts.get_user_posts(id)
+    except:
+        result = False
     return render_template("dashboard.html", posts=result)
 
 @app.route("/dashboard/comments")
