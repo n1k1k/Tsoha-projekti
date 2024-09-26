@@ -16,3 +16,7 @@ body {
 .modal-content.rounded-4.shadow {
     background: white;
 }
+
+.navbar-title {
+    margin-left: 8px;
+}

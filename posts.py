@@ -3,6 +3,24 @@ from app import app
 from db import db
 from sqlalchemy.sql import text
 
+def add_comment(content, author_id, post_id):
+    date_added = datetime.now()
+    try:   
+        sql = """INSERT INTO comment (content, author_id, post_id, date_added)
+          VALUES (:content, :author_id, :post_id, :date_added)"""
+        db.session.execute(text(sql), {"content":content, "author_id":author_id, "post_id":post_id, "date_added":date_added})
+        db.session.commit()
+    except:
+        return False  
+    return True
+
+
+def get_comments(post_id):
+    sql = 'SELECT c.content, c.date_added, c.author_id, u.username FROM comment c JOIN "user" u ON c.author_id=u.id WHERE c.post_id=:post_id'
+    result = db.session.execute(text(sql), {"post_id":post_id})
+    comments = result.fetchall()
+    return comments
+
 def add_post(title, content, author, author_id):
     date_added = datetime.now()
     try:   

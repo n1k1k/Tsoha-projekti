@@ -2,7 +2,7 @@ from app import app
 import users
 import posts
 from flask import session, render_template, flash, redirect, url_for
-from forms import SignUpForm, LoginForm, PostForm, EditUserForm
+from forms import SignUpForm, LoginForm, PostForm, EditUserForm, CommentForm
 
 
 @app.route("/")
@@ -16,7 +16,7 @@ def add_post():
     form = PostForm()
 
     try:
-        session["username"]
+        session["id"]
         logged_in = True
     except:
         logged_in = False
@@ -42,10 +42,36 @@ def add_post():
     
     return render_template("add_post.html", form=form)
 
-@app.route("/posts/<int:id>")
+@app.route("/posts/<int:id>", methods=["GET", "POST"])
 def post(id):
+    form = CommentForm()
     result = posts.get_post(id)
-    return render_template("post.html", post=result)
+    comments = posts.get_comments(id)
+
+    if form.validate_on_submit():
+        try:
+            session["id"]
+            logged_in = True
+        except:
+            logged_in = False
+        if not logged_in:
+            flash("You need to be logged in to comment...")
+            return redirect(url_for("login"))
+
+        content = form.content.data
+        author_id = session["id"]
+        post_id = id
+
+        form.content.data = ""
+
+        if not posts.add_comment(content, author_id, post_id):
+            flash("Error! Try Again")
+            return render_template("post", id=id, form=form, comments=comments)
+        else:
+            flash("Comment Added")
+            render_template("post.html", post=result, form=form, comments=comments)
+
+    return render_template("post.html", post=result, form=form, comments = comments)
 
 @app.route("/edit-posts/<int:id>", methods=["GET", "POST"])
 def edit_post(id):
