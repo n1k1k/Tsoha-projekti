@@ -125,9 +125,12 @@ def dashboard():
 
 @app.route("/dashboard/comments")
 def user_comments():
-    #placeholder
-    comments = []
-    return render_template("dashboard_comments.html", comments=comments)
+    try:
+        id = session["id"]
+        result = comments.get_user_comments(id)
+    except:
+        result = False
+    return render_template("dashboard_comments.html", comments=result)
 
 @app.route("/admin")
 def admin():
