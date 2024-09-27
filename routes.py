@@ -1,6 +1,7 @@
 from app import app
 import users
 import posts
+import comments
 from flask import session, render_template, flash, redirect, url_for
 from forms import SignUpForm, LoginForm, PostForm, EditUserForm, CommentForm
 
@@ -15,23 +16,16 @@ def index():
 def add_post():
     form = PostForm()
 
-    try:
-        session["id"]
-        logged_in = True
-    except:
-        logged_in = False
-
     if form.validate_on_submit():
-        if logged_in:
+        if users.is_logged_in:
             title = form.title.data
             content = form.title.data
-            author = session["username"]
             author_id = session["id"]
 
             form.title.data = ""
             form.content.data = ""
             
-            if not posts.add_post(title, content, author, author_id):
+            if not posts.add_post(title, content, author_id):
                 flash("Error! Try Again")
                 return render_template("add_post.html", form=form)
             else:
@@ -46,15 +40,10 @@ def add_post():
 def post(id):
     form = CommentForm()
     result = posts.get_post(id)
-    comments = posts.get_comments(id)
+    post_comments = comments.get_comments(id)
 
     if form.validate_on_submit():
-        try:
-            session["id"]
-            logged_in = True
-        except:
-            logged_in = False
-        if not logged_in:
+        if not users.is_logged_in:
             flash("You need to be logged in to comment...")
             return redirect(url_for("login"))
 
@@ -64,14 +53,15 @@ def post(id):
 
         form.content.data = ""
 
-        if not posts.add_comment(content, author_id, post_id):
+        if not comments.add_comment(content, author_id, post_id):
             flash("Error! Try Again")
-            return render_template("post", id=id, form=form, comments=comments)
+            return render_template("post", id=id, form=form, comments=post_comments)
         else:
             flash("Comment Added")
-            render_template("post.html", post=result, form=form, comments=comments)
+            post_comments = comments.get_comments(id)
+            render_template("post.html", post=result, form=form, comments=post_comments)
 
-    return render_template("post.html", post=result, form=form, comments = comments)
+    return render_template("post.html", post=result, form=form, comments=post_comments)
 
 @app.route("/edit-posts/<int:id>", methods=["GET", "POST"])
 def edit_post(id):
@@ -111,6 +101,18 @@ def delete_post(id):
             flash("Post Deleted") 
             return redirect("/")
 
+@app.route("/delete-comment/<int:id>")
+def delete_comment(id):
+    comment_to_delete = comments.get_comment(id)
+
+    if comment_to_delete.author_id == session["id"]:
+        if not comments.delete_comment(id):
+            flash("Error")
+            return render_template("post", id=id)
+        else:
+            flash("Comment Deleted") 
+            return redirect(url_for("post", id=comment_to_delete.post_id))
+
 
 @app.route("/dashboard")
 def dashboard():
@@ -122,7 +124,7 @@ def dashboard():
     return render_template("dashboard.html", posts=result)
 
 @app.route("/dashboard/comments")
-def comments():
+def user_comments():
     #placeholder
     comments = []
     return render_template("dashboard_comments.html", comments=comments)

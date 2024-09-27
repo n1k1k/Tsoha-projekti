@@ -14,7 +14,7 @@
 
     <div class="card">
         <div class="card-header">
-          @{{ post.author }}
+          @{{ post.username }}
         </div>
         <div class="card-body">
           <h4 class="card-title">{{ post.title }}</h4>
@@ -61,8 +61,7 @@
           <small>{{ comment.date_added }}</small>
           <br/><br/>   
           {% if session.id == comment.author_id %}
-            <a href="/" class="btn btn-outline-dark">Edit</a>
-            <a href="/" class="btn btn-outline-danger">Delete</a>
+            <a href="{{ url_for('delete_comment', id=comment.id) }}" class="btn btn-outline-danger">Delete</a>
           {% endif %}
         </div>
       </div><br/><br/>

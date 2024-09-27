@@ -5,6 +5,13 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime
 from sqlalchemy.sql import text
 
+def is_logged_in():
+    try:
+        session["id"]
+        return True
+    except:
+        return False
+
 def get_user(id):
     sql = '''SELECT * FROM "user" 
         WHERE id=:id'''

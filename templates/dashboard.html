@@ -29,14 +29,14 @@
 
         <div class="btn-group">
           <a href="{{ url_for('dashboard') }}" class="btn btn-light active">Your Posts</a>
-          <a href="{{ url_for('comments') }}" class="btn btn-light">Your Comments</a>
+          <a href="{{ url_for('user_comments') }}" class="btn btn-light">Your Comments</a>
         </div><br/><br/>
 
         {% if posts %}
           {% for post in posts %}
             <div class="card">
                 <div class="card-header">
-                  @{{ post.author }}
+                  @{{ post.username }}
                 </div>
                 <div class="card-body">
                   <h5 class="card-title">{{ post.title }}</h5>
