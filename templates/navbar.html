@@ -17,8 +17,8 @@
             <li><a href="{{ url_for('index') }}" class="nav-link px-2">Home</a></li>
             <li><a href="{{ url_for('add_post') }}" class="nav-link px-2">Add Post</a></li>
               <li><a href="{{ url_for('dashboard') }}" class="nav-link px-2">User Dashboard</a></li>
-            {% if session.role == "admin" %}
-              <li><a href="{{ url_for('admin') }}" class="nav-link px-2">Admin</a></li>
+            {% if session.role == "administrator" %}
+              <li><a href="{{ url_for('admin') }}" class="nav-link px-2">Administrator Dashboard</a></li>
             {% endif %}
           </ul>
   

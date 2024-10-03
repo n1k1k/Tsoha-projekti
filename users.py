@@ -5,6 +5,8 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime
 from sqlalchemy.sql import text
 
+print(generate_password_hash('test', 'scrypt'))
+
 def is_logged_in():
     try:
         session["id"]
@@ -13,44 +15,44 @@ def is_logged_in():
         return False
 
 def get_user(id):
-    sql = '''SELECT * FROM "user" 
-        WHERE id=:id'''
+    sql = '''SELECT * FROM "user" WHERE id=:id'''
     result = db.session.execute(text(sql), {"id":id})
     user = result.fetchone()
-    return user
+    if user:
+        return True
+    return False
 
-def signup(username, email, password):
+def check_email(email):
     sql = 'SELECT id FROM "user" WHERE email=:email'
     result = db.session.execute(text(sql), {"email":email})
     user = result.fetchone()
-
-    if user == None:
-        role = "user"
-        date_added = datetime.now()
-        password_hash = generate_password_hash(password, 'scrypt')
-
-        try:
-            print("test3")
-            role = "general user"
-            sql = """INSERT INTO "user" (username, email, password, role, date_added)
-                    VALUES (:username, :email, :password, :role, :date_added)"""
-            db.session.execute(text(sql), {"username":username, "email":email, "password":password_hash, "role":role, "date_added":date_added})
-            db.session.commit()
-            return login(email, password)
-        except:
-            return False  
-    else:
+    if user != None:
         return False
+    return True
+
+def signup(username, email, password):
+    sql = 'SELECT id FROM role WHERE role_name=:role_name'
+    result = db.session.execute(text(sql), {"role_name":'general user'})
+    role_id = result.fetchone()
+    date_added = datetime.now()
+    password_hash = generate_password_hash(password, 'scrypt')
+
+    try:
+        sql = """INSERT INTO "user" (username, email, password, role_id, date_added)
+                VALUES (:username, :email, :password, :role_id, :date_added)"""
+        db.session.execute(text(sql), {"username":username, "email":email, "password":password_hash, "role_id":role_id[0], "date_added":date_added})
+        db.session.commit()
+        return login(email, password)
+    except:
+        return False  
+
+    
     
 def login(email, password):
-    sql = '''SELECT password, id, role, username, date_added FROM "user" 
+    sql = '''SELECT u.password, u.id, r.role_name, u.username, u.date_added FROM "user" u JOIN role r ON u.role_id=r.id
         WHERE email=:email'''
     result = db.session.execute(text(sql), {"email":email})
     user = result.fetchone()
-    print(user)
-
-    if user == None:
-        return False
 
     if not check_password_hash(user[0], password):
         return False

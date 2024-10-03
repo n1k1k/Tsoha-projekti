@@ -148,12 +148,14 @@ def login():
         form.email.data = ""
         form.password.data = ""
 
+        if not users.check_email(email):
+            flash('We cloud not find an account with this email.')
+
         if not users.login(email, password):
-            flash('Something went wrong. Try Again!')
+            flash('Wrong Password')
         else:
             return redirect(url_for('dashboard'))
 
-    
     return render_template("login.html", form=form)
 
 @app.route("/logout", methods=["GET", "POST"])
@@ -176,6 +178,9 @@ def sign_up():
         form.email.data = ""
         form.password.data = ""
 
+        if not users.check_email(email):
+            flash("Email already in use")
+            return render_template("sign_up.html", form=form)
         if not users.signup(username, email, password):
             flash("Error! Try Again")
             return render_template("sign_up.html", form=form)
