@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {% include "message.html" %}
+    
+    {% if session.role == "administrator" %}
+        <br/>
+        <h1 class="light-title">Administrator Dashboard</h1>
+        <br/>
+        <div class="btn-group">
+            <a href="{{ url_for('admin') }}" class="btn btn-light">Users</a>
+            <a href="{{ url_for('admin_posts') }}" class="btn btn-dark light" aria-current="page">Posts</a>
+        </div>
+        <br/><br/>
+
+        <form class="d-flex" role="search">
+            <input class="form-control me-2" type="search" placeholder="Search for Users" aria-label="Search">
+            <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+        <br/><br/><br/>
+
+        {% for post in posts %}
+            <div class="card">
+                <div class="card-header">
+                @{{ post.username }} #{{ post.author_id }}
+                </div>
+                <div class="card-body">
+                <h5 class="card-title">#{{ post.id }} {{ post.title }}</h5>
+                <p class="card-text">{{ post.content }}</p>
+                <br/>
+        
+                <small>{{ post.date_added }}</small>
+                <br/><br/>
+                <a href="{{ url_for('post', id=post.id) }}" class="btn btn-dark">View Post</a>
+                <a href="{{ url_for('delete_post', id=post.id) }}" class="btn btn-outline-danger">Delete</a>
+                </div>
+            </div>
+            <br/><br/>
+        {% endfor %}
+                 
+
+    {% else %}
+        
+        
+
+    {% endif %}
+
+{% endblock %}

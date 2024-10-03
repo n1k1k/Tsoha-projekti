@@ -93,12 +93,14 @@ def edit_post(id):
 def delete_post(id):
     post_to_delete = posts.get_post(id)
 
-    if post_to_delete.author_id == session["id"]:
+    if post_to_delete.author_id == session["id"] or session["role"] == "administrator":
         if not posts.delete_post(id):
             flash("Error")
             return render_template("post", id=id)
         else:
             flash("Post Deleted") 
+            if session["role"] == "administrator":
+                return redirect(url_for("admin_posts"))
             return redirect("/")
 
 @app.route("/delete-comment/<int:id>")
@@ -112,6 +114,22 @@ def delete_comment(id):
         else:
             flash("Comment Deleted") 
             return redirect(url_for("post", id=comment_to_delete.post_id))
+
+@app.route("/delete-user/<int:id>")
+def delete_user(id):
+    user_to_delete = users.get_user(id)
+
+    if user_to_delete.id == session["id"] or session["role"] == "administrator":
+        if not users.delete_user(id):
+            flash("Error")
+            if session["role"] == "administrator":
+                return redirect(url_for("admin"))
+            return redirect(url_for("dashboard"))
+        else:
+            flash("User deleted successfully") 
+            if session["role"] == "administrator":
+                return redirect(url_for("admin"))
+            return redirect(url_for("sign_up"))
 
 
 @app.route("/dashboard")
@@ -140,6 +158,14 @@ def admin():
     flash("Access Denied")
     return redirect(url_for("index"))
 
+@app.route("/admin/posts")
+def admin_posts():
+    if session["role"] == "administrator":
+        result = posts.get_posts()
+        return render_template("admin_posts.html", posts=result)
+    flash("Access Denied")
+    return redirect(url_for("index"))
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
     form = LoginForm()
@@ -154,7 +180,7 @@ def login():
         if users.check_email(email):
             flash('We cloud not find an account with this email.')
 
-        if not users.login(email, password):
+        elif not users.login(email, password):
             flash('Wrong Password')
         else:
             return redirect(url_for('dashboard'))

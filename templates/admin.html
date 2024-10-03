@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
+    {% include "message.html" %}
 
     {% if session.role == "administrator" %}
         <br/>
@@ -8,8 +9,7 @@
         <br/>
         <div class="btn-group">
             <a href="{{ url_for('admin') }}" class="btn btn-dark light" aria-current="page">Users</a>
-            <a href="#" class="btn btn-light">Posts</a>
-            <a href="#" class="btn btn-light">Comments</a>
+            <a href="{{ url_for('admin_posts') }}" class="btn btn-light">Posts</a>
         </div>
         <br/><br/>
 
@@ -40,6 +40,10 @@
                             <td>{{ user.email }}</td>
                             <td>{{ user.role_name }}</td>
                             <td>{{ user.date_added }}</td>
+                            <td>
+                                <a href="{{ url_for('delete_user', id=user.id) }}" class="btn btn-outline-danger">Delete</a>
+                            </td>
+                            
                         </tr>
                     {% endfor %}
                 </tbody>

@@ -5,11 +5,18 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime
 from sqlalchemy.sql import text
 
-print(generate_password_hash('test', 'scrypt'))
-
 def is_logged_in():
     try:
         session["id"]
+        return True
+    except:
+        return False
+    
+def delete_user(id):
+    try:   
+        sql = 'DELETE FROM "user" WHERE id=:id;'
+        db.session.execute(text(sql), {"id":id})
+        db.session.commit()
         return True
     except:
         return False
@@ -25,9 +32,7 @@ def get_user(id):
     sql = '''SELECT * FROM "user" WHERE id=:id'''
     result = db.session.execute(text(sql), {"id":id})
     user = result.fetchone()
-    if user:
-        return True
-    return False
+    return user
 
 def check_email(email):
     sql = 'SELECT id FROM "user" WHERE email=:email'
@@ -60,6 +65,9 @@ def login(email, password):
         WHERE email=:email'''
     result = db.session.execute(text(sql), {"email":email})
     user = result.fetchone()
+
+    if not user:
+        return False
 
     if not check_password_hash(user[0], password):
         return False

@@ -13,22 +13,27 @@ CREATE TABLE role (
 );
 
 CREATE TABLE following (
-    follower_id INTEGER REFERENCES "user"(id),
+    follower_id INTEGER REFERENCES "user"(id)
+    ON DELETE CASCADE,
     followed_id INTEGER REFERENCES "user"(id)
+    ON DELETE CASCADE
 );
 
 CREATE TABLE post (
     id SERIAL PRIMARY KEY,
     title VARCHAR(50),
     content VARCHAR(2000),
-    author_id INTEGER REFERENCES "user"(id),
-    date_added TIMESTAMP
+    date_added TIMESTAMP,
+    author_id INTEGER REFERENCES "user"(id)
+    ON DELETE CASCADE
 );
 
 CREATE TABLE comment (
     id SERIAL PRIMARY KEY,
     content VARCHAR(500),
-    author_id INTEGER REFERENCES "user"(id),
-    post_id INTEGER REFERENCES post(id),
-    date_added TIMESTAMP
+    author_id INTEGER REFERENCES "user"(id)
+    ON DELETE CASCADE,
+    date_added TIMESTAMP,
+    post_id INTEGER REFERENCES post(id)
+    ON DELETE CASCADE
 );

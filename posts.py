@@ -40,14 +40,14 @@ def get_posts():
     return posts
 
 def get_user_posts(id):
-    sql = '''SELECT p.id, p.title, p.content, p.author_id,  p.date_added, u.username 
+    sql = '''SELECT p.id, p.title, p.content, p.author_id, p.date_added, u.username 
             FROM post p JOIN "user" u ON p.author_id=u.id WHERE p.author_id=:id ORDER BY p.date_added DESC'''
     result = db.session.execute(text(sql), {"id":id})
     posts = result.fetchall()
     return posts
  
 def get_post(id):
-    sql = '''SELECT p.id, p.title, p.content, p.date_added, u.username 
+    sql = '''SELECT p.id, p.title, p.content, p.author_id, p.date_added, u.username 
             FROM post p JOIN "user" u ON p.author_id=u.id WHERE p.id=:id'''
     result = db.session.execute(text(sql), {"id":id})
     post= result.fetchone()
