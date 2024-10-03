@@ -2,26 +2,54 @@
 
 {% block content %}
 
-    <br/>
-    <h1 class="light-title">Administrator Dashboard</h1>
-    <br/>
-    <div class="btn-group">
-        <a href="{{ url_for('admin') }}" class="btn btn-dark light" aria-current="page">Users</a>
-        <a href="#" class="btn btn-light">Posts</a>
-        <a href="#" class="btn btn-light">Comments</a>
-    </div>
-    <br/><br/>
+    {% if session.role == "administrator" %}
+        <br/>
+        <h1 class="light-title">Administrator Dashboard</h1>
+        <br/>
+        <div class="btn-group">
+            <a href="{{ url_for('admin') }}" class="btn btn-dark light" aria-current="page">Users</a>
+            <a href="#" class="btn btn-light">Posts</a>
+            <a href="#" class="btn btn-light">Comments</a>
+        </div>
+        <br/><br/>
 
-    <form class="d-flex" role="search">
-        <input class="form-control me-2" type="search" placeholder="Search for Users" aria-label="Search">
-        <button class="btn btn-outline-success" type="submit">Search</button>
-    </form>
-    <br/><br/><br/>
-
-    <div class="shadow p-3 mb-5 bg-body-tertiary rounded">
-        <h3>List of users...</h3>
+        <form class="d-flex" role="search">
+            <input class="form-control me-2" type="search" placeholder="Search for Users" aria-label="Search">
+            <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
         <br/><br/><br/>
-    </div>
 
+        <div class="shadow p-3 mb-5 bg-body-tertiary rounded">
+            <h3>List of users...</h3>
+            <br/><br/><br/>
+            <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Username</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Role</th>
+                    <th scope="col">Member since</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                        <tr>
+                            <th scope="row">{{ user.id }}</th>
+                            <td>{{ user.username }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>{{ user.role_name }}</td>
+                            <td>{{ user.date_added }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    {% else %}
+        
+        
+
+    {% endif %}
 
 {% endblock %}

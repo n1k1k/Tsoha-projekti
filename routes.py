@@ -134,8 +134,11 @@ def user_comments():
 
 @app.route("/admin")
 def admin():
-    return render_template("admin.html")
-
+    if session["role"] == "administrator":
+        result = users.get_users()
+        return render_template("admin.html", users=result)
+    flash("Access Denied")
+    return redirect(url_for("index"))
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -148,7 +151,7 @@ def login():
         form.email.data = ""
         form.password.data = ""
 
-        if not users.check_email(email):
+        if users.check_email(email):
             flash('We cloud not find an account with this email.')
 
         if not users.login(email, password):

@@ -14,6 +14,13 @@ def is_logged_in():
     except:
         return False
 
+def get_users():
+    sql = '''SELECT u.id, u.username, u.email, u.date_added, r.role_name 
+            FROM "user" u JOIN role r on u.role_id=r.id ORDER BY u.date_added DESC'''
+    result = db.session.execute(text(sql), {"id":id})
+    users = result.fetchall()
+    return users
+
 def get_user(id):
     sql = '''SELECT * FROM "user" WHERE id=:id'''
     result = db.session.execute(text(sql), {"id":id})
