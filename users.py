@@ -5,6 +5,25 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime
 from sqlalchemy.sql import text
 
+def follow(follower_id, followed_id):
+    try:
+        sql = """INSERT INTO following (follower_id, followed_id)
+                VALUES (:follower_id, :followed_id)"""
+        db.session.execute(text(sql), {"follower_id":follower_id, "followed_id":followed_id})
+        db.session.commit()
+        return True
+    except:
+        return False
+
+def unfollow(follower_id, followed_id):
+    try:
+        sql = """DELETE FROM following WHERE follower_id=:follower_id AND followed_id=:followed_id"""
+        result = db.session.execute(text(sql), {"follower_id":follower_id, "followed_id":followed_id})
+        db.session.commit()
+        return True
+    except:
+        return False
+
 def is_logged_in():
     try:
         session["id"]

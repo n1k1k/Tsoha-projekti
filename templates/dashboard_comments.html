@@ -1,57 +1,44 @@
 {% extends "base.html" %}
 
 {% block content %}
-
-  {% for message in get_flashed_messages() %}
-  <div class="alert alert-secondary" role="alert">
-      {{ message }}
-    <!--<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-        </button>-->
-  </div>
-  {% endfor %}
-    <br/>
-    <h1 class="light-title">Your Dashboard</h1>
-    <br/>
+  {% include "message.html" %}<br/>
+    <h1 class="light-title">Your Dashboard</h1><br/>
 
     {% if session.username %}
-
-    <div class="card">
-      <h5 class="card-header">Account Information</h5>
-      <div class="card-body">
-        <p class="card-text">
-          <p class="card-text"><strong>Username:</strong> {{ session.username }}</p>
-          <p class="card-text"><strong>Email:</strong> {{ session.email }}</p>
-          <p class="card-text"><strong>You have been a member scince:</strong> {{ session.date_added }}</p>
-        <!--<a href="#" class="btn btn-primary">Go somewhere</a>-->
-      </div>
-    </div><br/><br/><br/>
-
-        <div class="btn-group">
-          <a href="{{ url_for('dashboard') }}" class="btn btn-light">Your Posts</a>
-          <a href="{{ url_for('user_comments') }}" class="btn btn-light active">Your Comments</a>
-        </div><br/><br/>
-
-      {% if comments %}
-        {% for comment in comments %}
-          <div class="card">
-            <div class="card-header">
-              @{{ comment.username }}
-            </div>
-            <div class="card-body">
-              <p class="card-text">{{ comment.content }}</p><br/>
-              <small>{{ comment.date_added }}</small><br/><br/>   
-              <a href="{{ url_for('post', id=comment.post_id) }}" class="btn btn-outline-dark">View original post</a>
-            </div>
-          </div><br/><br/>
-        {% endfor %}
-      {% else %}
-        <div class="text-center">
-          <br/><br/>
-          <h3 class="light-title">Looks like you haven't made any comments yet...</h3>
+      <div class="card">
+        <h5 class="card-header">Account Information</h5>
+        <div class="card-body">
+          <p class="card-text">
+            <p class="card-text"><strong>Username:</strong> {{ session.username }}</p>
+            <p class="card-text"><strong>Email:</strong> {{ session.email }}</p>
+            <p class="card-text"><strong>You have been a member scince:</strong> {{ session.date_added }}</p>
+          <!--<a href="#" class="btn btn-primary">Go somewhere</a>-->
         </div>
-      {% endif %}
-
+      </div><br/><br/><br/>
+          <div class="btn-group">
+            <a href="{{ url_for('dashboard') }}" class="btn btn-light">Your Posts</a>
+            <a href="{{ url_for('user_comments') }}" class="btn btn-light active">Your Comments</a>
+          </div><br/><br/>
+          
+        {% if comments %}
+          {% for comment in comments %}
+            <div class="card">
+              <div class="card-header">
+                @{{ comment.username }}
+              </div>
+              <div class="card-body">
+                <p class="card-text">{{ comment.content }}</p><br/>
+                <small>{{ comment.date_added }}</small><br/><br/>   
+                <a href="{{ url_for('post', id=comment.post_id) }}" class="btn btn-outline-dark">View original post</a>
+              </div>
+            </div><br/><br/>
+          {% endfor %}
+        {% else %}
+          <div class="text-center">
+            <br/><br/>
+            <h3 class="light-title">Looks like you haven't made any comments yet...</h3>
+          </div>
+        {% endif %}
       {% else %}
           <h3 class="light-title">Please login to view this page...</h3>
       {% endif %}

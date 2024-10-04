@@ -17,7 +17,7 @@ def add_post():
     form = PostForm()
 
     if form.validate_on_submit():
-        if users.is_logged_in:
+        if users.is_logged_in():
             title = form.title.data
             content = form.title.data
             author_id = session["id"]
@@ -43,23 +43,22 @@ def post(id):
     post_comments = comments.get_comments(id)
 
     if form.validate_on_submit():
-        if not users.is_logged_in:
+        if not users.is_logged_in():
             flash("You need to be logged in to comment...")
             return redirect(url_for("login"))
-
-        content = form.content.data
-        author_id = session["id"]
-        post_id = id
-
-        form.content.data = ""
-
-        if not comments.add_comment(content, author_id, post_id):
-            flash("Error! Try Again")
-            return render_template("post", id=id, form=form, comments=post_comments)
         else:
-            flash("Comment Added")
-            post_comments = comments.get_comments(id)
-            render_template("post.html", post=result, form=form, comments=post_comments)
+            content = form.content.data
+            author_id = session["id"]
+            post_id = id
+            form.content.data = ""
+
+            if not comments.add_comment(content, author_id, post_id):
+                flash("Error! Try Again")
+                return render_template("post", id=id, form=form, comments=post_comments)
+            else:
+                flash("Comment Added")
+                post_comments = comments.get_comments(id)
+                render_template("post.html", post=result, form=form, comments=post_comments)
 
     return render_template("post.html", post=result, form=form, comments=post_comments)
 
@@ -130,7 +129,6 @@ def delete_user(id):
             if session["role"] == "administrator":
                 return redirect(url_for("admin"))
             return redirect(url_for("sign_up"))
-
 
 @app.route("/dashboard")
 def dashboard():
@@ -219,6 +217,46 @@ def sign_up():
     
     return render_template("sign_up.html", form=form)
 
+@app.route("/profile/<int:id>")
+def profile(id):
+    user = users.get_user(id)
+    user_posts = posts.get_user_posts(id)
+    return render_template("profile.html", user=user, posts=user_posts)
+
+@app.route("/profile/comments/<int:id>")
+def profile_comments(id):
+    user = users.get_user(id)
+    user_comments = comments.get_user_comments(id)
+    return render_template("profile_comments.html", user=user, comments=user_comments)
+
+@app.route("/follow/<int:id>")
+def follow(id):
+    followed_id= id
+    if not users.is_logged_in():
+        flash('Please log in first')
+        return redirect(url_for('login'))
+    else:
+        follower_id = session["id"]
+        if not users.follow(follower_id, followed_id):
+            flash("Error")
+            return redirect(url_for('profile', id=followed_id))
+
+    return redirect(url_for('profile', id=followed_id))
+
+@app.route("/unfollow/<int:id>")
+def unfollow(id):
+    followed_id= id
+
+    if not users.is_logged_in():
+        flash('Please log in first')
+        return redirect(url_for('login'))
+    else:
+        follower_id = session["id"]
+        if not users.unfollow(follower_id, followed_id):
+            flash("Error")
+            return redirect(url_for('profile', id=followed_id))
+
+    return redirect(url_for('profile', id=followed_id))
 
 
 """@app.route("/edit/<int:id>", methods=["GET", "POST"])

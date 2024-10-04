@@ -1,25 +1,15 @@
 {% extends "base.html" %}
 
 {% block content %}
-
-  {% for message in get_flashed_messages() %}
-  <div class="alert alert-secondary" role="alert">
-      {{ message }}
-      <!--<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-      <span aria-hidden="true">&times;</span>
-      </button>-->
-  </div>
-  {% endfor %}
-  
-    <br/>
-    {% if not session.username %}
-      {% include "jumbotron.html" %}<br/><br/>
-    {% endif %}
+ {% include "message.html" %}<br/>
+  {% if not session.username %}
+    {% include "jumbotron.html" %}<br/><br/>
+  {% endif %}
     
     {% for post in posts %}
     <div class="card">
         <div class="card-header">
-          @{{ post.username }}
+          <a href="{{ url_for('profile', id=post.author_id) }}">@{{ post.username }}</a>
         </div>
         <div class="card-body">
           <h5 class="card-title">{{ post.title }}</h5>
