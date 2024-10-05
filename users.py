@@ -5,6 +5,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime
 from sqlalchemy.sql import text
 
+print(generate_password_hash("test"))
 
 def followed_accounts(follower_id):
     sql = '''SELECT u.id, u.username FROM "user" u JOIN following f on u.id=f.followed_id WHERE f.follower_id=:follower_id'''
@@ -12,24 +13,30 @@ def followed_accounts(follower_id):
     accounts = result.fetchall()
     return accounts
 
-def follow(follower_id, followed_id):
-    try:
-        sql = """INSERT INTO following (follower_id, followed_id)
-                VALUES (:follower_id, :followed_id)"""
-        db.session.execute(text(sql), {"follower_id":follower_id, "followed_id":followed_id})
-        db.session.commit()
-        return True
-    except:
-        return False
+def follow(followed_id):
+    follower_id = session["id"]
+    if follower_id != followed_id:
+        try:
+            sql = """INSERT INTO following (follower_id, followed_id)
+                    VALUES (:follower_id, :followed_id)"""
+            db.session.execute(text(sql), {"follower_id":follower_id, "followed_id":followed_id})
+            db.session.commit()
+            return True
+        except:
+            return False
+    return False
 
-def unfollow(follower_id, followed_id):
-    try:
-        sql = """DELETE FROM following WHERE follower_id=:follower_id AND followed_id=:followed_id"""
-        result = db.session.execute(text(sql), {"follower_id":follower_id, "followed_id":followed_id})
-        db.session.commit()
-        return True
-    except:
-        return False
+def unfollow(followed_id):
+    follower_id = session["id"]
+    if follower_id != followed_id:
+        try:
+            sql = """DELETE FROM following WHERE follower_id=:follower_id AND followed_id=:followed_id"""
+            result = db.session.execute(text(sql), {"follower_id":follower_id, "followed_id":followed_id})
+            db.session.commit()
+            return True
+        except:
+            return False
+    return False
 
 def is_logged_in():
     try:

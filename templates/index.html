@@ -10,9 +10,9 @@
   <div class="btn-group">
     <a href="{{ url_for('index') }}" class="btn btn-light active">All Posts</a>
     {% if session.id %}
-      <a href="{{ url_for('followed_accounts', id=session.id) }}" class="btn btn-light">Account you follow</a>
+      <a href="{{ url_for('followed_accounts', id=session.id) }}" class="btn btn-light">Accounts you follow</a>
     {% else %}
-      <a href="{{ url_for('login') }}" class="btn btn-light">Account you follow</a>
+      <a href="{{ url_for('login') }}" class="btn btn-light">Accounts you follow</a>
     {% endif %}
   </div><br/><br/>
     

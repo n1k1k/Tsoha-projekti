@@ -20,3 +20,7 @@ body {
 .navbar-title {
     margin-left: 8px;
 }
+
+#red {
+    color: red;
+}

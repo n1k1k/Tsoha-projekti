@@ -6,7 +6,7 @@
   <div class="btn-group">
     <a href="{{ url_for('index') }}" class="btn btn-light active">All Posts</a>
     {% if session.id %}
-      <a href="{{ url_for('followed_accounts', id=session.id) }}" class="btn btn-light">Account you follow</a>
+      <a href="{{ url_for('followed_accounts', id=session.id) }}" class="btn btn-light">Accounts you follow</a>
     {% else %}
       <a href="{{ url_for('login') }}" class="btn btn-light">Accounts you follow</a>
     {% endif %}
@@ -16,22 +16,27 @@
     <div class="container">
         <div class = "row">
             <div class="col-8">
-                {% for post in posts %}
-                    <div class="card">
-                        <div class="card-header">
-                        <a href="{{ url_for('profile', id=post.author_id) }}">@{{ post.username }}</a>
-                        </div>
-                        <div class="card-body">
-                            <h5 class="card-title">{{ post.title }}</h5>
-                            <p class="card-text">{{ post.content }}</p>
-                            <br/>
-                    
-                            <small>{{ post.date_added }}</small>
-                            <br/><br/>
-                            <a href="{{ url_for('post', id=post.id) }}" class="btn btn-dark">View Post</a>
-                        </div>
-                    </div><br/><br/>
-                {% endfor %}
+                {% if posts %}
+                    {% for post in posts %}
+                        <div class="card">
+                            <div class="card-header">
+                            <a href="{{ url_for('profile', id=post.author_id) }}">@{{ post.username }}</a>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">{{ post.title }}</h5>
+                                <p class="card-text">{{ post.content }}</p>
+                                <br/>
+                        
+                                <small>{{ post.date_added }}</small>
+                                <br/><br/>
+                                <a href="{{ url_for('post', id=post.id) }}" class="btn btn-dark">View Post</a>
+                            </div>
+                        </div><br/><br/>
+                    {% endfor %}
+                {% else %}
+                    </br></br>
+                    <h3 class="light-title">The accounts you follow have not made any posts...</h3>
+                {% endif %}
             </div>
             <div class="col-4">
                 <div class="shadow p-3 mb-5 bg-body-tertiary rounded">

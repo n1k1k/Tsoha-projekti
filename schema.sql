@@ -22,7 +22,7 @@ CREATE TABLE following (
 
 CREATE TABLE post (
     id SERIAL PRIMARY KEY,
-    title VARCHAR(50),
+    title VARCHAR(100),
     content VARCHAR(2500),
     date_added TIMESTAMP,
     author_id INTEGER REFERENCES "user"(id)

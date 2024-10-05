@@ -147,8 +147,9 @@ def user_comments():
 
 @app.route("/admin")
 def admin():
-    if not users.is_logged_in(id):
+    if not users.is_logged_in():
         flash("Please log in to view this page")
+        return redirect(url_for("login"))
     if session["role"] == "administrator":
         result = users.get_users()
         return render_template("admin.html", users=result)
@@ -265,8 +266,7 @@ def follow(id):
         flash('Please log in first')
         return redirect(url_for('login'))
     else:
-        follower_id = session["id"]
-        if not users.follow(follower_id, followed_id):
+        if not users.follow(followed_id):
             flash("Error")
             return redirect(url_for('profile', id=followed_id))
 
@@ -280,8 +280,7 @@ def unfollow(id):
         flash('Please log in first')
         return redirect(url_for('login'))
     else:
-        follower_id = session["id"]
-        if not users.unfollow(follower_id, followed_id):
+        if not users.unfollow(followed_id):
             flash("Error")
             return redirect(url_for('profile', id=followed_id))     
     return redirect(url_for('dashboard'))

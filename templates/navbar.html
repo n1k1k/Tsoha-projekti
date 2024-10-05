@@ -18,7 +18,7 @@
             <li><a href="{{ url_for('add_post') }}" class="nav-link px-2">Add Post</a></li>
               <li><a href="{{ url_for('dashboard') }}" class="nav-link px-2">User Dashboard</a></li>
             {% if session.role == "administrator" %}
-              <li><a href="{{ url_for('admin') }}" class="nav-link px-2">Administrator Dashboard</a></li>
+              <li><a href="{{ url_for('admin') }}" id="red" class="nav-link px-2">Administrator Dashboard</a></li>
             {% endif %}
           </ul>
   
