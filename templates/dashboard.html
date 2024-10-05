@@ -1,64 +1,53 @@
 {% extends "base.html" %}
 
 {% block content %}
-
-  {% for message in get_flashed_messages() %}
-  <div class="alert alert-secondary" role="alert">
-      {{ message }}
-    <!--<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-        </button>-->
-  </div>
-  {% endfor %}
-    <br/>
-    <h1 class="light-title">Your Dashboard</h1>
-    <br/>
+  {% include "message.html" %}<br/>
+    <h1 class="light-title">Your Dashboard</h1><br/>
 
     {% if session.username %}
 
-    <div class="card">
-      <h5 class="card-header">Account Information</h5>
-      <div class="card-body">
-        <p class="card-text">
-          <p class="card-text"><strong>Username:</strong> {{ session.username }}</p>
-          <p class="card-text"><strong>Email:</strong> {{ session.email }}</p>
-          <p class="card-text"><strong>You have been a member scince:</strong> {{ session.date_added }}</p>
-        <!--<a href="#" class="btn btn-primary">Go somewhere</a>-->
-      </div>
-    </div><br/><br/><br/>
-
+      <div class="card">
+        <h5 class="card-header">Account Information</h5>
+        <div class="card-body">
+          <p class="card-text">
+            <p class="card-text"><strong>Username:</strong> {{ session.username }}</p>
+            <p class="card-text"><strong>Email:</strong> {{ session.email }}</p>
+            <p class="card-text"><strong>You have been a member scince:</strong> {{ session.date_added }}</p>
+            <p class="card-text"><strong>Bio:</strong> {{ session.bio }}</p></br>
+            <a href="{{ url_for('edit_user', id=session.id )}}" class="btn btn-dark">Update Account Information</a>
+        </div>
+        </div><br/><br/><br/>
         <div class="btn-group">
           <a href="{{ url_for('dashboard') }}" class="btn btn-light active">Your Posts</a>
           <a href="{{ url_for('user_comments') }}" class="btn btn-light">Your Comments</a>
         </div><br/><br/>
-
-        {% if posts %}
-          {% for post in posts %}
-            <div class="card">
-                <div class="card-header">
-                  @{{ post.username }}
-                </div>
-                <div class="card-body">
-                  <h5 class="card-title">{{ post.title }}</h5>
-                  <p class="card-text">{{ post.content }}</p>
-                  <br/>
-          
-                  <small>{{ post.date_added }}</small>
-                  <br/><br/>
-                  <a href="{{ url_for('post', id=post.id) }}" class="btn btn-dark">View Post</a> 
-                  <a href="{{ url_for('edit_post', id=post.id) }}" class="btn btn-outline-dark">Edit</a>
-                  <a href="{{ url_for('delete_post', id=post.id) }}" class="btn btn-outline-danger">Delete</a>
-                </div>
-            </div><br/><br/>
-          {% endfor %}
-        {% else %}
-        <div class="text-center">
-          <br/><br/>
-          <h3 class="light-title">Looks like you haven't made any posts yet...</h3>
-          <br/>
-          <a href="{{ url_for('add_post') }}" class="btn btn-light">Add Post</a>
-        </div>
-        {% endif %}
+          {% if posts %}
+            {% for post in posts %}
+              <div class="card">
+                  <div class="card-header">
+                    @{{ post.username }}
+                  </div>
+                  <div class="card-body">
+                    <h5 class="card-title">{{ post.title }}</h5>
+                    <p class="card-text">{{ post.content }}</p>
+                    <br/>
+            
+                    <small>{{ post.date_added }}</small>
+                    <br/><br/>
+                    <a href="{{ url_for('post', id=post.id) }}" class="btn btn-dark">View Post</a> 
+                    <a href="{{ url_for('edit_post', id=post.id) }}" class="btn btn-outline-dark">Edit</a>
+                    <a href="{{ url_for('delete_post', id=post.id) }}" class="btn btn-outline-danger">Delete</a>
+                  </div>
+              </div><br/><br/>
+            {% endfor %}
+          {% else %}
+            <div class="text-center">
+              <br/><br/>
+              <h3 class="light-title">Looks like you haven't made any posts yet...</h3>
+              <br/>
+              <a href="{{ url_for('add_post') }}" class="btn btn-light">Add Post</a>
+            </div>
+          {% endif %}
 
       {% else %}
           <h3 class="light-title">Please login to view this page...</h3>

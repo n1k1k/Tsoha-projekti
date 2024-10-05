@@ -13,6 +13,7 @@ class SignUpForm(FlaskForm):
 class EditUserForm(FlaskForm):
     username = StringField("Username", validators=[DataRequired()])
     email = StringField("Email", validators=[DataRequired()])
+    bio = StringField("Bio", widget=TextArea())
     submit = SubmitField("Submit")
 
 

@@ -1,8 +1,9 @@
 CREATE TABLE "user" (
     id SERIAL PRIMARY KEY,
-    username VARCHAR(50) UNIQUE, 
-    email VARCHAR(255),
-    password TEXT,
+    username VARCHAR(35) UNIQUE, 
+    email VARCHAR(300),
+    password VARCHAR(300),
+    bio VARCHAR(500),
     role_id INTEGER REFERENCES "role"(id),
     date_added TIMESTAMP
 );
@@ -22,7 +23,7 @@ CREATE TABLE following (
 CREATE TABLE post (
     id SERIAL PRIMARY KEY,
     title VARCHAR(50),
-    content VARCHAR(2000),
+    content VARCHAR(2500),
     date_added TIMESTAMP,
     author_id INTEGER REFERENCES "user"(id)
     ON DELETE CASCADE
@@ -30,7 +31,7 @@ CREATE TABLE post (
 
 CREATE TABLE comment (
     id SERIAL PRIMARY KEY,
-    content VARCHAR(500),
+    content VARCHAR(1000),
     author_id INTEGER REFERENCES "user"(id)
     ON DELETE CASCADE,
     date_added TIMESTAMP,

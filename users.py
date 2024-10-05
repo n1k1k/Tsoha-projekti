@@ -5,6 +5,13 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime
 from sqlalchemy.sql import text
 
+
+def followed_accounts(follower_id):
+    sql = '''SELECT u.id, u.username FROM "user" u JOIN following f on u.id=f.followed_id WHERE f.follower_id=:follower_id'''
+    result = db.session.execute(text(sql), {"follower_id":follower_id})
+    accounts = result.fetchall()
+    return accounts
+
 def follow(follower_id, followed_id):
     try:
         sql = """INSERT INTO following (follower_id, followed_id)
@@ -48,7 +55,7 @@ def get_users():
     return users
 
 def get_user(id):
-    sql = '''SELECT * FROM "user" WHERE id=:id'''
+    sql = '''SELECT id, username, email, bio, date_added FROM "user" WHERE id=:id'''
     result = db.session.execute(text(sql), {"id":id})
     user = result.fetchone()
     return user
@@ -78,10 +85,9 @@ def signup(username, email, password):
         return False  
 
     
-    
 def login(email, password):
-    sql = '''SELECT u.password, u.id, r.role_name, u.username, u.date_added FROM "user" u JOIN role r ON u.role_id=r.id
-        WHERE email=:email'''
+    sql = '''SELECT u.password, u.id, r.role_name, u.username, u.date_added, u.bio 
+        FROM "user" u JOIN role r ON u.role_id=r.id WHERE email=:email'''
     result = db.session.execute(text(sql), {"email":email})
     user = result.fetchone()
 
@@ -96,6 +102,7 @@ def login(email, password):
     session["role"] = user[2]
     session["username"] = user[3]
     session["date_added"] = user[4]
+    session["bio"] = user[5]
     #session["csrf_token"] = os.urandom(16).hex()
     return True
 
@@ -105,18 +112,16 @@ def logout():
     del session["role"]
     del session["username"]
 
-"""def edit_user(id, username, email):
+def edit_user(id, username, email, bio):
     if id == session["id"]:
         try:
-            print("1")
-            sql = "UPDATE "user" SET email = :email, username = :username WHERE id = :id"
-            db.session.execute(text(sql), {"email":email, "username":username, "id":id})
+            sql = 'UPDATE "user" SET email=:email, username=:username, bio=:bio WHERE id=:id'
+            db.session.execute(text(sql), {"email":email, "username":username, "bio":bio, "id":id})
             db.session.commit()
-            print("5")
             session["email"] = email
             session["username"] = username
+            session["bio"] = bio
             return True
         except:
-            return False
-        
-    return False"""
+            return False  
+    return False

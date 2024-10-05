@@ -85,7 +85,6 @@ def edit_post(id):
         form.title.data = post_to_edit.title
         form.content.data = post_to_edit.content
         return render_template("edit_post.html", form=form)
-    
     return render_template("edit_post.html", form=form)
 
 @app.route("/delete-post/<int:id>")
@@ -259,26 +258,32 @@ def unfollow(id):
     return redirect(url_for('profile', id=followed_id))
 
 
-"""@app.route("/edit/<int:id>", methods=["GET", "POST"])
+@app.route("/edit/<int:id>", methods=["GET", "POST"])
 def edit_user(id):
     form = EditUserForm()
-    user_to_update = users.get_user(id)
-    form.username.data = user_to_update.username
-    form.email.data = user_to_update.email
+    user = users.get_user(id)
 
     if form.validate_on_submit():
         username = form.username.data
         email = form.email.data
+        bio = form.bio.data
 
         form.username.data = ""
         form.email.data = ""
+        form.bio.data = ""
 
-        if not users.edit_user(id, username, email):
+        if not users.edit_user(id, username, email, bio):
             flash("Error")
             return redirect(url_for("dashboard"))
         else:
             flash("You information was updated")
-            return render_template("dashboard.html")
-
-
-    return render_template("edit_user.html", form=form)"""
+            return redirect(url_for("dashboard"))
+        
+    if id == session["id"]:
+        form.username.data = user.username
+        form.email.data = user.email
+        form.bio.data = user.bio
+        return render_template("edit_user.html", form=form)
+    else:
+        flash("Unauthorized Access")
+        return redirect(url_for('index'))
