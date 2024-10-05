@@ -11,7 +11,8 @@
       <p class="card-text">
         <h4>@{{ user.username }}</h4>
         <p class="card-text"><strong>Bio:</strong><br/> text </p>
-        <a href="#" class="btn btn-dark">Follow</a>
+        <a href="{{ url_for('unfollow', id=user.id) }}" class="btn btn-dark">Unfollow</a>
+        <a href="{{ url_for('unfollow', id=user.id) }}" class="btn btn-dark">Unfollow</a>
     </div>
   </div><br/><br/><br/>
       <div class="btn-group">

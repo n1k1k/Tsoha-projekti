@@ -52,3 +52,10 @@ def get_post(id):
     result = db.session.execute(text(sql), {"id":id})
     post= result.fetchone()
     return post
+
+def get_followed_posts(id):
+    sql = '''SELECT p.id, p.title, p.content, p.author_id, p.date_added, u.username 
+            FROM post p JOIN "user" u ON p.author_id=u.id INNER JOIN following f on p.author_id=f.followed_id WHERE f.follower_id=:id ORDER BY p.date_added DESC'''
+    result = db.session.execute(text(sql), {"id":id})
+    posts = result.fetchall()
+    return posts

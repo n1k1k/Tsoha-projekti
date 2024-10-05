@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block content %}
+  {% include "message.html" %}<br/><br/>
+
+  <div class="btn-group">
+    <a href="{{ url_for('index') }}" class="btn btn-light active">All Posts</a>
+    {% if session.id %}
+      <a href="{{ url_for('followed_accounts', id=session.id) }}" class="btn btn-light">Account you follow</a>
+    {% else %}
+      <a href="{{ url_for('login') }}" class="btn btn-light">Accounts you follow</a>
+    {% endif %}
+  </div><br/><br/>
+
+  {% if accounts %}
+    <div class="container">
+        <div class = "row">
+            <div class="col-8">
+                {% for post in posts %}
+                    <div class="card">
+                        <div class="card-header">
+                        <a href="{{ url_for('profile', id=post.author_id) }}">@{{ post.username }}</a>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ post.title }}</h5>
+                            <p class="card-text">{{ post.content }}</p>
+                            <br/>
+                    
+                            <small>{{ post.date_added }}</small>
+                            <br/><br/>
+                            <a href="{{ url_for('post', id=post.id) }}" class="btn btn-dark">View Post</a>
+                        </div>
+                    </div><br/><br/>
+                {% endfor %}
+            </div>
+            <div class="col-4">
+                <div class="shadow p-3 mb-5 bg-body-tertiary rounded">
+                <h5>Followed accounts...</h5>
+                <table class="table table-light">
+                    <thead>
+                    <tr>
+                        <th scope="col">Username</th>
+                        <th scope="col"></th>
+                    </tr>
+                    </thead>
+                    <tbody class="table-group-divider">
+                        {% for account in accounts %}
+                            <tr>
+                                <td>{{ account.username }}</td>
+                                <td class="text-end">
+                                    <a href="{{ url_for('unfollow', id=account.id) }}" class="btn btn-dark">Unfollow</a>
+                                </td>  
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table> 
+                </div>    
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="text-center">
+        <br/><br/>
+        <h3 class="light-title">Looks like you don't follow any account yet...</h3>
+      </div>
+    {% endif %}
+{% endblock %}

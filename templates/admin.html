@@ -30,13 +30,14 @@
                     <th scope="col">Email</th>
                     <th scope="col">Role</th>
                     <th scope="col">Member since</th>
+                    <th scope="col">Member since</th>
                   </tr>
                 </thead>
                 <tbody>
                     {% for user in users %}
                         <tr>
                             <th scope="row">{{ user.id }}</th>
-                            <td>{{ user.username }}</td>
+                            <td><a href="{{ url_for('profile', id=user.id)}}">{{ user.username }}</a></td>
                             <td>{{ user.email }}</td>
                             <td>{{ user.role_name }}</td>
                             <td>{{ user.date_added }}</td>

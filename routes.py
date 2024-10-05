@@ -5,12 +5,10 @@ import comments
 from flask import session, render_template, flash, redirect, url_for
 from forms import SignUpForm, LoginForm, PostForm, EditUserForm, CommentForm
 
-
 @app.route("/")
 def index():
     result = posts.get_posts()
     return render_template("index.html", posts = result)
-
 
 @app.route("/add-post", methods=["GET", "POST"])
 def add_post():
@@ -31,7 +29,7 @@ def add_post():
             else:
                 flash("Post added Succesfully!")
                 return redirect(url_for("index"))
-        elif not logged_in:
+        elif not users.is_logged_in(id):
             flash("Please login!")
     
     return render_template("add_post.html", form=form)
@@ -149,6 +147,8 @@ def user_comments():
 
 @app.route("/admin")
 def admin():
+    if not users.is_logged_in(id):
+        flash("Please log in to view this page")
     if session["role"] == "administrator":
         result = users.get_users()
         return render_template("admin.html", users=result)
@@ -228,36 +228,6 @@ def profile_comments(id):
     user_comments = comments.get_user_comments(id)
     return render_template("profile_comments.html", user=user, comments=user_comments)
 
-@app.route("/follow/<int:id>")
-def follow(id):
-    followed_id= id
-    if not users.is_logged_in():
-        flash('Please log in first')
-        return redirect(url_for('login'))
-    else:
-        follower_id = session["id"]
-        if not users.follow(follower_id, followed_id):
-            flash("Error")
-            return redirect(url_for('profile', id=followed_id))
-
-    return redirect(url_for('profile', id=followed_id))
-
-@app.route("/unfollow/<int:id>")
-def unfollow(id):
-    followed_id= id
-
-    if not users.is_logged_in():
-        flash('Please log in first')
-        return redirect(url_for('login'))
-    else:
-        follower_id = session["id"]
-        if not users.unfollow(follower_id, followed_id):
-            flash("Error")
-            return redirect(url_for('profile', id=followed_id))
-
-    return redirect(url_for('profile', id=followed_id))
-
-
 @app.route("/edit/<int:id>", methods=["GET", "POST"])
 def edit_user(id):
     form = EditUserForm()
@@ -287,3 +257,44 @@ def edit_user(id):
     else:
         flash("Unauthorized Access")
         return redirect(url_for('index'))
+
+@app.route("/follow/<int:id>")
+def follow(id):
+    followed_id= id
+    if not users.is_logged_in():
+        flash('Please log in first')
+        return redirect(url_for('login'))
+    else:
+        follower_id = session["id"]
+        if not users.follow(follower_id, followed_id):
+            flash("Error")
+            return redirect(url_for('profile', id=followed_id))
+
+    return redirect(url_for('profile', id=followed_id))
+
+@app.route("/unfollow/<int:id>")
+def unfollow(id):
+    followed_id= id
+
+    if not users.is_logged_in():
+        flash('Please log in first')
+        return redirect(url_for('login'))
+    else:
+        follower_id = session["id"]
+        if not users.unfollow(follower_id, followed_id):
+            flash("Error")
+            return redirect(url_for('profile', id=followed_id))     
+    return redirect(url_for('dashboard'))
+
+@app.route("/followed-accounts/<int:id>")
+def followed_accounts(id):
+    if not users.is_logged_in():
+        flash("Please log in to view this page")
+        return redirect(url_for('login'))
+    if session["id"] == id:
+        accounts = users.followed_accounts(id)
+        post = posts.get_followed_posts(id)
+        return render_template("followed.html", accounts=accounts, posts=post)
+    else:
+        flash("Unahtorized access")
+        return redirect(url_for('dashboard'))

@@ -1,13 +1,23 @@
 {% extends "base.html" %}
 
 {% block content %}
- {% include "message.html" %}<br/>
+ {% include "message.html" %}<br/><br/>
+
   {% if not session.username %}
     {% include "jumbotron.html" %}<br/><br/>
   {% endif %}
+
+  <div class="btn-group">
+    <a href="{{ url_for('index') }}" class="btn btn-light active">All Posts</a>
+    {% if session.id %}
+      <a href="{{ url_for('followed_accounts', id=session.id) }}" class="btn btn-light">Account you follow</a>
+    {% else %}
+      <a href="{{ url_for('login') }}" class="btn btn-light">Account you follow</a>
+    {% endif %}
+  </div><br/><br/>
     
     {% for post in posts %}
-    <div class="card">
+      <div class="card">
         <div class="card-header">
           <a href="{{ url_for('profile', id=post.author_id) }}">@{{ post.username }}</a>
         </div>
@@ -24,11 +34,8 @@
             <a href="{{ url_for('edit_post', id=post.id) }}" class="btn btn-outline-dark">Edit</a>
             <a href="{{ url_for('delete_post', id=post.id) }}" class="btn btn-outline-danger">Delete</a>
           {% endif %}
-        
         </div>
-      </div>
-      <br/><br/>
+      </div><br/><br/>
   {% endfor %}
   
-
 {% endblock %}
