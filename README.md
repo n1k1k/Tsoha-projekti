@@ -7,6 +7,7 @@ Sovelluksen ominaisuuksia:
 :white_check_mark: = Tällä hetkellä toimivat ominaisuudet 
 
 - Käyttäjä voi kirjautua sisään ja ulos sekä luoda uuden tunnuksen :white_check_mark:
+- Käyttäjä voi muokata tilinsä tietoja :white_check_mark:
 - Käyttäjä voi seurata muita käyttäjiä :white_check_mark:
 - Käyttäjä näkee sovelluksen etusivulla listan viestiketjuista :white_check_mark:
 - Käyttäjä voi suodattaa viestiketjuja niin että hän näkee vain seuraamiensa käyttäjien luomat viestiketjut :white_check_mark:
