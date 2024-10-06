@@ -41,7 +41,10 @@
           </div>
         {% endif %}
       {% else %}
-          <h3 class="light-title">Please login to view this page...</h3>
+        <div class="text-center">
+          <a href="{{ url_for('login') }}" class="btn btn-light rounded-pill btn-lg" id="pillbutton">Login</a>
+          <a href="{{ url_for('sign_up') }}" class="btn btn-dark rounded-pill btn-lg">Sign up</a>
+        </div>
       {% endif %}
 
 {% endblock %}

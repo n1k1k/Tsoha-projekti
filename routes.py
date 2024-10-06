@@ -66,7 +66,8 @@ def add_post():
                 flash("Post added Succesfully!")
                 return redirect(url_for("index"))
         else:
-            flash("You need to be logged in to post...")
+            flash("You need to be logged in to make posts...")
+            return redirect(url_for('login'))
     
     return render_template("add_post.html", form=form)
 
@@ -78,7 +79,7 @@ def post(id):
 
     if form.validate_on_submit():
         if not users.is_logged_in():
-            flash("You need to be logged in to comment...")
+            flash("You need to be logged in to make comments...")
             return redirect(url_for("login"))
         else:
             content = form.content.data

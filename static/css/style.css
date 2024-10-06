@@ -1,3 +1,6 @@
+#base {
+    min-height: 72vh;
+}
 
 .alert {
     padding: 20px;
@@ -33,6 +36,7 @@
     color: white;
 }
 
+
 body {
     background: rgb(131,58,180);
     background: linear-gradient(90deg, rgba(131,58,180,1) 0%, 
@@ -48,7 +52,26 @@ body {
     margin-left: 8px;
 }
 
+.footer-title {
+    margin-left: 8px;
+    margin-bottom: 1px;
+    color: white;
+}
+
 #red {
     color: red;
 }
 
+#footer {
+    position: relative;
+    bottom: 0vh;
+    width: 100%;
+}
+
+#light-logo {
+    color: white;
+}
+
+#pillbutton {
+    margin-right: 10px;
+}
