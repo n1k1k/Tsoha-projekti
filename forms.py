@@ -30,3 +30,7 @@ class PostForm(FlaskForm):
 class CommentForm(FlaskForm):
     content = StringField("Content", validators=[DataRequired()], widget=TextArea())
     submit = SubmitField("Submit")
+
+class SearchForm(FlaskForm):
+    search = StringField("Search", validators=[DataRequired()])
+    submit = SubmitField("Search")

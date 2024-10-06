@@ -3,12 +3,28 @@ import users
 import posts
 import comments
 from flask import session, render_template, flash, redirect, url_for
-from forms import SignUpForm, LoginForm, PostForm, EditUserForm, CommentForm
+from forms import SearchForm, SignUpForm, LoginForm, PostForm, EditUserForm, CommentForm
 
 @app.route("/")
 def index():
     result = posts.get_posts()
     return render_template("index.html", posts = result)
+
+@app.context_processor
+def base():
+    form = SearchForm()
+    return dict(form=form)
+
+@app.route("/search", methods=["POST", "GET"])
+def search():
+    form = SearchForm()
+
+    if form.validate_on_submit():
+        searched = form.search.data
+        result = posts.get_searched_posts(searched)
+
+        return render_template("search.html", form=form, searched=searched, posts=result)
+    #return render_template("search.html", form=form)
 
 @app.route("/add-post", methods=["GET", "POST"])
 def add_post():

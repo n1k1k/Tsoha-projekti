@@ -22,8 +22,9 @@
             {% endif %}
           </ul>
   
-        <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
-          <input type="search" class="form-control form-control-dark text-bg-light" placeholder="Search..." aria-label="Search">
+        <form method="POST" action="{{ url_for('search') }}" class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
+          {{ form.hidden_tag() }}
+          <input type="search" class="form-control form-control-dark text-bg-light" placeholder="Search..." aria-label="Search" name="search">
         </form>
   
         <div class="text-end">
@@ -33,9 +34,6 @@
             <a href="{{ url_for('login') }}" class="btn btn-outline-dark rounded-pill" role="button" aria-disabled="login">Login</a>
             <a href="{{ url_for('sign_up')}}"  class="btn btn-dark rounded-pill" role="button" aria-disabled="sign up">Sign Up</a>
           {% endif %}
-          <!--<button type="button" class="btn btn-outline-dark">Login</button>
-          <button type="button" class="btn btn-dark">Sign-up</button>
-        -->
         </div>
       <!--</header>-->
     </div>
