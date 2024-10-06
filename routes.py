@@ -65,8 +65,8 @@ def add_post():
             else:
                 flash("Post added Succesfully!")
                 return redirect(url_for("index"))
-        elif not users.is_logged_in(id):
-            flash("Please login!")
+        else:
+            flash("You need to be logged in to post...")
     
     return render_template("add_post.html", form=form)
 
@@ -139,29 +139,13 @@ def delete_post(id):
 def delete_comment(id):
     comment_to_delete = comments.get_comment(id)
 
-    if comment_to_delete.author_id == session["id"]:
+    if comment_to_delete.author_id == session["id"] or session["role"] == "administrator":
         if not comments.delete_comment(id):
             flash("Error")
             return render_template("post", id=id)
         else:
             flash("Comment Deleted") 
             return redirect(url_for("post", id=comment_to_delete.post_id))
-
-@app.route("/delete-user/<int:id>")
-def delete_user(id):
-    user_to_delete = users.get_user(id)
-
-    if user_to_delete.id == session["id"] or session["role"] == "administrator":
-        if not users.delete_user(id):
-            flash("Error")
-            if session["role"] == "administrator":
-                return redirect(url_for("admin"))
-            return redirect(url_for("dashboard"))
-        else:
-            flash("User deleted successfully") 
-            if session["role"] == "administrator":
-                return redirect(url_for("admin"))
-            return redirect(url_for("sign_up"))
 
 @app.route("/dashboard")
 def dashboard():
@@ -170,6 +154,7 @@ def dashboard():
         result = posts.get_user_posts(id)
     except:
         result = False
+        flash("You need to logged in to view this page")
     return render_template("dashboard.html", posts=result)
 
 @app.route("/dashboard/comments")
@@ -230,7 +215,7 @@ def login():
         form.password.data = ""
 
         if users.check_email(email):
-            flash('We cloud not find an account with this email.')
+            flash('We could not find an account with this email.')
 
         elif not users.login(email, password):
             flash('Wrong Password')
@@ -312,6 +297,22 @@ def edit_user(id):
     else:
         flash("Unauthorized Access")
         return redirect(url_for('index'))
+
+@app.route("/delete-user/<int:id>")
+def delete_user(id):
+    user_to_delete = users.get_user(id)
+
+    if user_to_delete.id == session["id"] or session["role"] == "administrator":
+        if not users.delete_user(id):
+            flash("Error")
+            if session["role"] == "administrator":
+                return redirect(url_for("admin"))
+            return redirect(url_for("dashboard"))
+        else:
+            flash("User deleted successfully") 
+            if session["role"] == "administrator":
+                return redirect(url_for("admin"))
+            return redirect(url_for("sign_up"))
 
 @app.route("/follow/<int:id>")
 def follow(id):

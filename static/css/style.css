@@ -1,5 +1,31 @@
+
+.alert {
+    padding: 20px;
+    background-color:white; /* Red */
+    color: rgb(26, 27, 27);
+    margin-bottom: 15px;
+    font-size: 18px;
+  }
+  
+
+  .closebtn {
+    margin-left: 15px;
+    color: rgb(79, 84, 90);
+    font-weight: bold;
+    float: right;
+    font-size: 25px;
+    line-height: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  
+
+  .closebtn:hover {
+    color: rgb(26, 27, 27);
+  }
+
 .nav-link.px-2 {
-    color: gray;
+    color: rgb(95, 95, 95);
   
   }
 
@@ -15,6 +41,7 @@ body {
 
 .modal-content.rounded-4.shadow {
     background: white;
+    color:rgb(26, 27, 27)
 }
 
 .navbar-title {
@@ -24,3 +51,4 @@ body {
 #red {
     color: red;
 }
+
