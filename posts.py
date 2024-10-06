@@ -67,3 +67,11 @@ def get_searched_posts(searched):
     result = db.session.execute(text(sql), {"searched":searched})
     posts = result.fetchall()
     return posts
+
+def get_searched_posts_id(searched):
+    searched = "%" + searched + "%"
+    sql = '''SELECT p.id, p.title, p.content, p.author_id, p.date_added, u.username 
+            FROM post p JOIN "user" u ON p.author_id=u.id WHERE p.id::text ILIKE :searched OR p.content ILIKE :searched OR p.title ILIKE :searched ORDER BY p.date_added DESC'''
+    result = db.session.execute(text(sql), {"searched":searched})
+    posts = result.fetchall()
+    return posts

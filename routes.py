@@ -35,6 +35,17 @@ def search_users():
 
     return render_template("search_users.html", form=form, searched=searched, users=result)
 
+@app.route("/search/posts", methods=["POST", "GET"])
+def search_posts():
+    form = SearchForm()
+
+    if form.validate_on_submit():
+            searched = form.search.data
+            result = posts.get_searched_posts_id(searched)
+
+    return render_template("search_posts.html", form=form, searched=searched, posts=result)
+
+
 @app.route("/add-post", methods=["GET", "POST"])
 def add_post():
     form = PostForm()
@@ -179,11 +190,10 @@ def admin():
         return redirect(url_for("login"))
     
     if session["role"] == "administrator":
-
         if form.validate_on_submit():
             searched = form.search.data
             result = users.get_searched_user(searched)
-            return redirect("search.html", form=form, searched=searched, users=result)
+            return redirect("search/users.html", form=form, searched=searched, users=result)
     
         result = users.get_users()
         return render_template("admin.html", users=result)
@@ -193,9 +203,18 @@ def admin():
 
 @app.route("/admin/posts")
 def admin_posts():
+    form = SearchForm()
+
     if session["role"] == "administrator":
         result = posts.get_posts()
         return render_template("admin_posts.html", posts=result)
+    
+    if session["role"] == "administrator":
+        if form.validate_on_submit():
+            searched = form.search.data
+            result = posts.get_searched_posts_id(searched)
+            return redirect("search/posts.html", form=form, searched=searched, posts=result)
+    
     flash("Access Denied")
     return redirect(url_for("index"))
 

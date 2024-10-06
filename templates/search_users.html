@@ -15,42 +15,48 @@
 
         <form method="POST" action="{{ url_for('search_users') }}" class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
             {{ form.hidden_tag() }}
-            <input type="search" class="form-control form-control-dark text-bg-light" placeholder="Search..." aria-label="Search" name="search">
+            <input type="search" class="form-control form-control-dark text-bg-light" placeholder="Search for users by username or id..." aria-label="Search" name="search">
         </form>
         <br/><br/><br/>
 
-        <div class="shadow p-3 mb-5 bg-body-tertiary rounded">
-            <h3>List of users...</h3>
-            <br/><br/><br/>
-            <table class="table">
-                <thead>
-                  <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Username</th>
-                    <th scope="col">Email</th>
-                    <th scope="col">Role</th>
-                    <th scope="col">Member since</th>
-                    <th scope="col">Member since</th>
-                  </tr>
-                </thead>
-                <tbody>
-                    {% for user in users %}
-                        <tr>
-                            <th scope="row">{{ user.id }}</th>
-                            <td><a href="{{ url_for('profile', id=user.id)}}">{{ user.username }}</a></td>
-                            <td>{{ user.email }}</td>
-                            <td>{{ user.role_name }}</td>
-                            <td>{{ user.date_added }}</td>
-                            <td>
-                                <a href="{{ url_for('delete_user', id=user.id) }}" class="btn btn-outline-danger">Delete</a>
-                            </td>
-                            
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+        {% if users %}
+            <h2 class="light-title">Results for "{{ searched }}"...</h2></br>
+            <div class="shadow p-3 mb-5 bg-body-tertiary rounded">
+                <h3>List of users...</h3>
+                <br/><br/><br/>
+                <table class="table">
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Username</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Role</th>
+                        <th scope="col">Member since</th>
+                        <th scope="col">Member since</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                            <tr>
+                                <th scope="row">{{ user.id }}</th>
+                                <td><a href="{{ url_for('profile', id=user.id)}}">{{ user.username }}</a></td>
+                                <td>{{ user.email }}</td>
+                                <td>{{ user.role_name }}</td>
+                                <td>{{ user.date_added }}</td>
+                                <td>
+                                    <a href="{{ url_for('delete_user', id=user.id) }}" class="btn btn-outline-danger">Delete</a>
+                                </td>
+                                
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>    
+        {% else %}
+            <h2 class="light-title">We could not fined any search results for {{ searched }}...</h2></br>
+        {% endif %}
 
+       
     {% else %}
         
         
