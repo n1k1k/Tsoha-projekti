@@ -24,7 +24,16 @@ def search():
         result = posts.get_searched_posts(searched)
 
         return render_template("search.html", form=form, searched=searched, posts=result)
-    #return render_template("search.html", form=form)
+
+@app.route("/search/users", methods=["POST", "GET"])
+def search_users():
+    form = SearchForm()
+
+    if form.validate_on_submit():
+            searched = form.search.data
+            result = users.get_searched_user(searched)
+
+    return render_template("search_users.html", form=form, searched=searched, users=result)
 
 @app.route("/add-post", methods=["GET", "POST"])
 def add_post():
@@ -163,12 +172,22 @@ def user_comments():
 
 @app.route("/admin")
 def admin():
+    form = SearchForm()
+
     if not users.is_logged_in():
         flash("Please log in to view this page")
         return redirect(url_for("login"))
+    
     if session["role"] == "administrator":
+
+        if form.validate_on_submit():
+            searched = form.search.data
+            result = users.get_searched_user(searched)
+            return redirect("search.html", form=form, searched=searched, users=result)
+    
         result = users.get_users()
         return render_template("admin.html", users=result)
+
     flash("Access Denied")
     return redirect(url_for("index"))
 

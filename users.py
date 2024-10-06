@@ -54,19 +54,6 @@ def delete_user(id):
     except:
         return False
 
-def get_users():
-    sql = '''SELECT u.id, u.username, u.email, u.date_added, r.role_name 
-            FROM "user" u JOIN role r on u.role_id=r.id ORDER BY u.date_added DESC'''
-    result = db.session.execute(text(sql), {"id":id})
-    users = result.fetchall()
-    return users
-
-def get_user(id):
-    sql = '''SELECT id, username, email, bio, date_added FROM "user" WHERE id=:id'''
-    result = db.session.execute(text(sql), {"id":id})
-    user = result.fetchone()
-    return user
-
 def check_email(email):
     sql = 'SELECT id FROM "user" WHERE email=:email'
     result = db.session.execute(text(sql), {"email":email})
@@ -90,7 +77,6 @@ def signup(username, email, password):
         return login(email, password)
     except:
         return False  
-
     
 def login(email, password):
     sql = '''SELECT u.password, u.id, r.role_name, u.username, u.date_added, u.bio 
@@ -132,3 +118,24 @@ def edit_user(id, username, email, bio):
         except:
             return False  
     return False
+
+def get_users():
+    sql = '''SELECT u.id, u.username, u.email, u.date_added, r.role_name 
+            FROM "user" u JOIN role r on u.role_id=r.id ORDER BY u.date_added DESC'''
+    result = db.session.execute(text(sql), {"id":id})
+    users = result.fetchall()
+    return users
+
+def get_user(id):
+    sql = '''SELECT id, username, email, bio, date_added FROM "user" WHERE id=:id'''
+    result = db.session.execute(text(sql), {"id":id})
+    user = result.fetchone()
+    return user
+
+def get_searched_user(searched):
+    searched="%"+searched+"%"
+    sql = '''SELECT u.id, u.username, u.email, u.date_added, r.role_name 
+            FROM "user" u JOIN role r on u.role_id=r.id WHERE u.username ILIKE :searched OR u.id::text LIKE :searched ORDER BY u.date_added DESC'''
+    result = db.session.execute(text(sql), {"searched":searched})
+    users = result.fetchall()
+    return users
