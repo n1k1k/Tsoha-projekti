@@ -22,8 +22,9 @@ def search():
     if form.validate_on_submit():
         searched = form.search.data
         result = posts.get_searched_posts(searched)
+        count= len(result)
 
-        return render_template("search.html", form=form, searched=searched, posts=result)
+        return render_template("search.html", form=form, searched=searched, count=count, posts=result)
 
 @app.route("/search/users", methods=["POST", "GET"])
 def search_users():
@@ -32,8 +33,9 @@ def search_users():
     if form.validate_on_submit():
             searched = form.search.data
             result = users.get_searched_user(searched)
+            count= len(result)
 
-    return render_template("search_users.html", form=form, searched=searched, users=result)
+    return render_template("search_users.html", form=form, searched=searched, count=count, users=result)
 
 @app.route("/search/posts", methods=["POST", "GET"])
 def search_posts():
@@ -42,8 +44,9 @@ def search_posts():
     if form.validate_on_submit():
             searched = form.search.data
             result = posts.get_searched_posts_id(searched)
+            count = len(result)
 
-    return render_template("search_posts.html", form=form, searched=searched, posts=result)
+    return render_template("search_posts.html", form=form, searched=searched, count= count, posts=result)
 
 
 @app.route("/add-post", methods=["GET", "POST"])
@@ -155,7 +158,7 @@ def dashboard():
         result = posts.get_user_posts(id)
     except:
         result = False
-        flash("You need to logged in to view this page")
+        flash("You need to br logged in to view this page...")
     return render_template("dashboard.html", posts=result)
 
 @app.route("/dashboard/comments")
@@ -351,5 +354,5 @@ def followed_accounts(id):
         post = posts.get_followed_posts(id)
         return render_template("followed.html", accounts=accounts, posts=post)
     else:
-        flash("Unahtorized access")
+        flash("Unauthorized access")
         return redirect(url_for('dashboard'))

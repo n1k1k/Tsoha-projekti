@@ -3,7 +3,7 @@
 {% block content %}
   {% include "message.html" %}
   </br>
-  <h1 class="light-title">User profile</h1>
+  <h1 class="light-title">{{ user.username }}'s profile</h1>
   <br/>
 
   <div class="card">
@@ -24,20 +24,7 @@
 
       {% if posts %}
         {% for post in posts %}
-          <div class="card">
-              <div class="card-header">
-                @{{ post.username }}
-              </div>
-              <div class="card-body">
-                <h5 class="card-title">{{ post.title }}</h5>
-                <p class="card-text">{{ post.content }}</p>
-                <br/>
-        
-                <small>{{ post.date_added }}</small>
-                <br/><br/>
-                <a href="{{ url_for('post', id=post.id) }}" class="btn btn-dark">View Post</a> 
-              </div>
-          </div><br/><br/>
+          {% include "posts.html" %}
         {% endfor %}
       {% else %}
         <div class="text-center"><br/><br/>

@@ -5,8 +5,6 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime
 from sqlalchemy.sql import text
 
-print(generate_password_hash("test"))
-
 def followed_accounts(follower_id):
     sql = '''SELECT u.id, u.username FROM "user" u JOIN following f on u.id=f.followed_id WHERE f.follower_id=:follower_id'''
     result = db.session.execute(text(sql), {"follower_id":follower_id})

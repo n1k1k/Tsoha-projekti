@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 
 {% block content %}
- {% include "message.html" %}<br/><br/>
+ {% include "message.html" %}<br/>
 
   {% if not session.username %}
-    {% include "jumbotron.html" %}<br/><br/>
+    {% include "jumbotron.html" %}<br/>
   {% endif %}
 
   <div class="btn-group">

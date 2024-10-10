@@ -4,7 +4,7 @@
   {% include "message.html" %}<br/>
     
     {% if session.username %}
-      <h1 class="light-title">{{ Username }}'s Dashboard</h1><br/>
+      <h1 class="light-title">{{ session.sername }}'s Dashboard</h1><br/>
 
       <div class="card">
         <h5 class="card-header">Account Information</h5>
@@ -22,24 +22,7 @@
           <a href="{{ url_for('user_comments') }}" class="btn btn-light">Your Comments</a>
         </div><br/><br/>
           {% if posts %}
-            {% for post in posts %}
-              <div class="card">
-                  <div class="card-header">
-                    @{{ post.username }}
-                  </div>
-                  <div class="card-body">
-                    <h5 class="card-title">{{ post.title }}</h5>
-                    <p class="card-text">{{ post.content }}</p>
-                    <br/>
-            
-                    <small>{{ post.date_added }}</small>
-                    <br/><br/>
-                    <a href="{{ url_for('post', id=post.id) }}" class="btn btn-dark">View Post</a> 
-                    <a href="{{ url_for('edit_post', id=post.id) }}" class="btn btn-outline-dark">Edit</a>
-                    <a href="{{ url_for('delete_post', id=post.id) }}" class="btn btn-outline-danger">Delete</a>
-                  </div>
-              </div><br/><br/>
-            {% endfor %}
+                  {% include "posts.html" %}
           {% else %}
             <div class="text-center">
               <br/><br/>
