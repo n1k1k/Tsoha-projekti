@@ -1,19 +1,25 @@
 {% extends "base.html" %}
 
 {% block content %}
-  {% include "message.html" %}
-  </br>
-  <h1 class="light-title">{{ user.username }}'s profile</h1>
-  <br/>
+  {% include "message.html" %}</br>
 
   <div class="card">
     <div class="card-body">
       <p class="card-text">
-        <h4>@{{ user.username }}</h4><br/>
-        <p class="card-text">{{ user.bio }}</p>
+        <h4>{{ user.username }}</h4><br/>
+        <p class="card-text">{{ user.bio }}</p></br>
         {% if session.id and session.id != user.id%}
-          <a href="{{ url_for('follow', id=user.id) }}" class="btn btn-dark">Follow</a>
-          <a href="{{ url_for('unfollow', id=user.id) }}" class="btn btn-dark">Unfollow</a>
+          {% if following %}
+            <a href="{{ url_for('unfollow', id=user.id) }}" class="btn btn-dark"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-dash" viewBox="0 0 16 16">
+              <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7M11 12h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1 0-1m0-7a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4"></path>
+              <path d="M8.256 14a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z"></path>
+            </svg> Unfollow</a>
+          {% else %}
+            <a href="{{ url_for('follow', id=user.id) }}" class="btn btn-dark"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-check" viewBox="0 0 16 16">
+              <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m1.679-4.493-1.335 2.226a.75.75 0 0 1-1.174.144l-.774-.773a.5.5 0 0 1 .708-.708l.547.548 1.17-1.951a.5.5 0 1 1 .858.514M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4"></path>
+              <path d="M8.256 14a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z"></path>
+            </svg> Follow</a>
+          {% endif %}
         {% endif %}
       </div>
   </div><br/><br/>
@@ -23,24 +29,7 @@
       </div><br/><br/>
 
       {% if comments %}
-        {% for comment in comments %}
-          <div class="card">
-            <div class="card-header">
-              @{{ comment.username }}
-            </div>
-            <div class="card-body">
-              <p class="card-text">{{ comment.content }}</p><br/>
-              <small>{{ comment.date_added }}</small><br/><br/>   
-              <a href="{{ url_for('post', id=comment.post_id) }}" class="btn btn-outline-dark">View original post</a>
-            </div>
-          </div><br/><br/>
-        {% endfor %}
-      {% else %}
-        <div class="text-center">
-          <br/><br/>
-          <h3 class="light-title">Looks like this users hasn't made any comments yet...</h3>
-        </div>
+        {% include "comments.html" %}
       {% endif %}
-
 
 {% endblock %}

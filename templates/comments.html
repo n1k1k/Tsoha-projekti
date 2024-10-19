@@ -1,0 +1,20 @@
+{% for comment in comments %}
+    <div class="card">
+    <div class="card-header">
+        <a href="{{ url_for('profile', id=comment.author_id) }}" class="text-dark text-decoration-none">
+            <svg id="icon" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"></path>
+                <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"></path>
+              </svg> {{ comment.username }}
+        </a>
+    </div>
+    <div class="card-body">
+        <p class="card-text">{{ comment.content }}</p><br/>
+        <small>{{ comment.date_added }}</small><br/><br/>   
+        <a href="{{ url_for('post', id=comment.post_id) }}" class="btn btn-outline-dark">View original Post</a>
+        {% if session.id == comment.author_id or session.role == "administrator" %}
+            <a href="{{ url_for('delete_comment', id=comment.id) }}" class="btn btn-outline-danger">Delete</a>
+        {% endif %}
+    </div>
+    </div><br/><br/>
+{% endfor %}

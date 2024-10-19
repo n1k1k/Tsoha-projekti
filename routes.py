@@ -347,7 +347,6 @@ def delete_user(id):
 @app.route("/follow/<int:id>")
 def follow(id):
     followed_id= id
-    followed_account = users.get_user(id)
     
     if not users.is_logged_in():
         flash('Please log in first')
@@ -357,7 +356,6 @@ def follow(id):
         flash("Error")
         return redirect(url_for('profile', id=followed_id))
 
-    flash('You are now following ' + followed_account.username)
     return redirect(url_for('profile', id=followed_id))
 
 @app.route("/unfollow/<int:id>")

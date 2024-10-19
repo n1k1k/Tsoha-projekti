@@ -34,7 +34,7 @@ def get_comment(id):
     return comments
 
 def get_comments(post_id):
-    sql = '''SELECT c.id, c.content, c.date_added, c.author_id, u.username
+    sql = '''SELECT c.id, c.content, c.date_added, c.post_id, c.author_id, u.username
         FROM comment c JOIN "user" u ON c.author_id=u.id WHERE c.post_id=:post_id
         ORDER BY c.date_added DESC'''
     result = db.session.execute(text(sql), {"post_id":post_id})
