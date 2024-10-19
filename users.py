@@ -12,6 +12,18 @@ def followed_accounts(follower_id):
     accounts = result.fetchall()
     return accounts
 
+def check_following(followed_id):
+    follower_id = session["id"]
+    sql = '''SELECT u.id, u.username FROM "user" u JOIN following f on
+        u.id=f.followed_id WHERE f.follower_id=:follower_id AND
+        f.followed_id=:followed_id'''
+    result = db.session.execute(text(sql), {"follower_id":follower_id, "followed_id":followed_id})
+    account = result.fetchone()
+
+    if account is not None:
+        return True
+    return False
+
 def follow(followed_id):
     follower_id = session["id"]
     if follower_id != followed_id:

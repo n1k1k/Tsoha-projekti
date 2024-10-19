@@ -132,32 +132,34 @@ def edit_post(id):
 def delete_post(id):
     post_to_delete = posts.get_post(id)
 
-    if post_to_delete.author_id == session["id"] or session["role"] == "administrator":
-        if not posts.delete_post(id):
-            flash("Error")
-            return render_template("post", id=id)
+    if users.is_logged_in():
+        if post_to_delete.author_id == session["id"] or session["role"] == "administrator":
+            if not posts.delete_post(id):
+                flash("Error")
+                return render_template("post", id=id)
 
-        flash("Post Deleted")
-        if session["role"] == "administrator":
-            return redirect(url_for("admin_posts"))
-        return redirect("/")
+            flash("Post Deleted")
+            if session["role"] == "administrator":
+                return redirect(url_for("admin_posts"))
+            return redirect("/")
 
-    flash("Unauthorized Access")
+    flash("⚠️ Unauthorized Access")
     return redirect(url_for('index'))
 
 @app.route("/delete-comment/<int:id>")
 def delete_comment(id):
     comment_to_delete = comments.get_comment(id)
 
-    if comment_to_delete.author_id == session["id"] or session["role"] == "administrator":
-        if not comments.delete_comment(id):
-            flash("Error")
-            return render_template("post", id=id)
+    if users.is_logged_in():
+        if comment_to_delete.author_id == session["id"] or session["role"] == "administrator":
+            if not comments.delete_comment(id):
+                flash("Error")
+                return render_template("post", id=id)
 
-        flash("Comment Deleted")
-        return redirect(url_for("post", id=comment_to_delete.post_id))
+            flash("Comment Deleted")
+            return redirect(url_for("post", id=comment_to_delete.post_id))
 
-    flash("Unauthorized Access")
+    flash("⚠️ Unauthorized Access")
     return redirect(url_for('index'))
 
 @app.route("/dashboard")
@@ -280,7 +282,12 @@ def sign_up():
 def profile(id):
     user = users.get_user(id)
     user_posts = posts.get_user_posts(id)
-    return render_template("profile.html", user=user, posts=user_posts)
+
+    if users.is_logged_in():
+        following = users.check_following(id)
+    else:
+        following = False
+    return render_template("profile.html", user=user, posts=user_posts, following=following)
 
 @app.route("/profile/comments/<int:id>")
 def profile_comments(id):
@@ -293,29 +300,30 @@ def edit_user(id):
     form = EditUserForm()
     user = users.get_user(id)
 
-    if form.validate_on_submit():
-        username = form.username.data
-        email = form.email.data
-        bio = form.bio.data
+    if users.is_logged_in():
+        if form.validate_on_submit():
+            username = form.username.data
+            email = form.email.data
+            bio = form.bio.data
 
-        form.username.data = ""
-        form.email.data = ""
-        form.bio.data = ""
+            form.username.data = ""
+            form.email.data = ""
+            form.bio.data = ""
 
-        if not users.edit_user(id, username, email, bio):
-            flash("Error")
+            if not users.edit_user(id, username, email, bio):
+                flash("Error")
+                return redirect(url_for("dashboard"))
+
+            flash("You information was updated")
             return redirect(url_for("dashboard"))
 
-        flash("You information was updated")
-        return redirect(url_for("dashboard"))
+        if id == session["id"]:
+            form.username.data = user.username
+            form.email.data = user.email
+            form.bio.data = user.bio
+            return render_template("edit_user.html", form=form)
 
-    if id == session["id"]:
-        form.username.data = user.username
-        form.email.data = user.email
-        form.bio.data = user.bio
-        return render_template("edit_user.html", form=form)
-
-    flash("Unauthorized Access")
+    flash("⚠️ Unauthorized Access")
     return redirect(url_for('index'))
 
 @app.route("/delete-user/<int:id>")
@@ -333,13 +341,14 @@ def delete_user(id):
             return redirect(url_for("admin"))
         return redirect(url_for("sign_up"))
 
-    flash("Unauthorized Access")
+    flash("⚠️ Unauthorized Access")
     return redirect(url_for('index'))
 
 @app.route("/follow/<int:id>")
 def follow(id):
     followed_id= id
-
+    followed_account = users.get_user(id)
+    
     if not users.is_logged_in():
         flash('Please log in first')
         return redirect(url_for('login'))
@@ -348,6 +357,7 @@ def follow(id):
         flash("Error")
         return redirect(url_for('profile', id=followed_id))
 
+    flash('You are now following ' + followed_account.username)
     return redirect(url_for('profile', id=followed_id))
 
 @app.route("/unfollow/<int:id>")
@@ -362,7 +372,7 @@ def unfollow(id):
         flash("Error")
         return redirect(url_for('profile', id=followed_id))
 
-    return redirect(url_for('dashboard'))
+    return redirect(url_for('profile', id=followed_id))
 
 @app.route("/followed-accounts/<int:id>")
 def followed_accounts(id):
@@ -371,7 +381,7 @@ def followed_accounts(id):
         flash("Please log in to view this page")
         return redirect(url_for('login'))
     if session["id"] != id:
-        flash("Unauthorized access")
+        flash("⚠️ Unauthorized access")
     else:
         accounts = users.followed_accounts(id)
         results = posts.get_followed_posts(id)
