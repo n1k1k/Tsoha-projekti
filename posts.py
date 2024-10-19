@@ -1,10 +1,12 @@
+from sqlalchemy.sql import text
+from flask import session
 from datetime import datetime
 from app import app
 from db import db
-from sqlalchemy.sql import text
 
-def add_post(title, content, author_id):
+def add_post(title, content):
     date_added = datetime.now()
+    author_id = session["id"]
     try:   
         sql = """INSERT INTO post (title, content, author_id, date_added)
           VALUES (:title, :content, :author_id, :date_added)"""

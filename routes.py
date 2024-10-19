@@ -1,9 +1,9 @@
+from flask import session, render_template, flash, redirect, url_for
+from forms import SearchForm, SignUpForm, LoginForm, PostForm, EditUserForm, CommentForm
 from app import app
 import users
 import posts
 import comments
-from flask import session, render_template, flash, redirect, url_for
-from forms import SearchForm, SignUpForm, LoginForm, PostForm, EditUserForm, CommentForm
 
 @app.route("/")
 def index():
@@ -19,34 +19,42 @@ def base():
 def search():
     form = SearchForm()
 
-    if form.validate_on_submit():
-        searched = form.search.data
-        result = posts.get_searched_posts(searched)
-        count= len(result)
+    searched = form.search.data
+    if not searched:
+        searched = ""
+    result = posts.get_searched_posts(searched)
+    count= len(result)
 
-        return render_template("search.html", form=form, searched=searched, count=count, posts=result)
+    return render_template("search.html", form=form, searched=searched,
+        count=count, posts=result)
+    
 
 @app.route("/search/users", methods=["POST", "GET"])
 def search_users():
     form = SearchForm()
 
-    if form.validate_on_submit():
-            searched = form.search.data
-            result = users.get_searched_user(searched)
-            count= len(result)
+    searched = form.search.data
+    if not searched:
+        searched = ""
+    result = users.get_searched_user(searched)
+    count= len(result)
+    return render_template("search_users.html", form=form, searched=searched,
+        count=count, users=result)
+ 
 
-    return render_template("search_users.html", form=form, searched=searched, count=count, users=result)
 
 @app.route("/search/posts", methods=["POST", "GET"])
 def search_posts():
     form = SearchForm()
 
-    if form.validate_on_submit():
-            searched = form.search.data
-            result = posts.get_searched_posts_id(searched)
-            count = len(result)
-
-    return render_template("search_posts.html", form=form, searched=searched, count= count, posts=result)
+    searched = form.search.data
+    if not searched:
+        searched = ""
+    result = posts.get_searched_posts_id(searched)
+    count = len(result)
+    return render_template("search_posts.html", form=form, searched=searched,
+        count= count, posts=result)
+    
 
 
 @app.route("/add-post", methods=["GET", "POST"])
@@ -57,21 +65,19 @@ def add_post():
         if users.is_logged_in():
             title = form.title.data
             content = form.title.data
-            author_id = session["id"]
-
             form.title.data = ""
             form.content.data = ""
-            
-            if not posts.add_post(title, content, author_id):
+
+            if not posts.add_post(title, content):
                 flash("Error! Try Again")
                 return render_template("add_post.html", form=form)
-            else:
-                flash("Post added Succesfully!")
-                return redirect(url_for("index"))
-        else:
-            flash("You need to be logged in to make posts...")
-            return redirect(url_for('login'))
-    
+
+            flash("Post added Succesfully!")
+            return redirect(url_for("index"))
+
+        flash("You need to be logged in to make posts...")
+        return redirect(url_for('login'))
+
     return render_template("add_post.html", form=form)
 
 @app.route("/posts/<int:id>", methods=["GET", "POST"])
@@ -84,19 +90,18 @@ def post(id):
         if not users.is_logged_in():
             flash("You need to be logged in to make comments...")
             return redirect(url_for("login"))
-        else:
-            content = form.content.data
-            author_id = session["id"]
-            post_id = id
-            form.content.data = ""
 
-            if not comments.add_comment(content, author_id, post_id):
-                flash("Error! Try Again")
-                return render_template("post", id=id, form=form, comments=post_comments)
-            else:
-                flash("Comment Added")
-                post_comments = comments.get_comments(id)
-                render_template("post.html", post=result, form=form, comments=post_comments)
+        content = form.content.data
+        post_id = id
+        form.content.data = ""
+
+        if not comments.add_comment(content, post_id):
+            flash("Error! Try Again")
+            return render_template("post", id=id, form=form, comments=post_comments)
+
+        flash("Comment Added")
+        post_comments = comments.get_comments(id)
+        render_template("post.html", post=result, form=form, comments=post_comments)
 
     return render_template("post.html", post=result, form=form, comments=post_comments)
 
@@ -115,14 +120,14 @@ def edit_post(id):
         if not posts.edit_post(id, title, content):
             flash("Error! Try Again")
             return render_template("add_post.html", form=form)
-        else:
-            flash("Post edited Succesfully!")
-            return redirect(url_for("post", id=id))
+
+        flash("Post edited Succesfully!")
+        return redirect(url_for("post", id=id))
 
     if post_to_edit.author_id == session["id"]:
         form.title.data = post_to_edit.title
         form.content.data = post_to_edit.content
-        return render_template("edit_post.html", form=form)
+
     return render_template("edit_post.html", form=form)
 
 @app.route("/delete-post/<int:id>")
@@ -133,11 +138,14 @@ def delete_post(id):
         if not posts.delete_post(id):
             flash("Error")
             return render_template("post", id=id)
-        else:
-            flash("Post Deleted") 
-            if session["role"] == "administrator":
-                return redirect(url_for("admin_posts"))
-            return redirect("/")
+
+        flash("Post Deleted")
+        if session["role"] == "administrator":
+            return redirect(url_for("admin_posts"))
+        return redirect("/")
+
+    flash("Unauthorized Access")
+    return redirect(url_for('index'))
 
 @app.route("/delete-comment/<int:id>")
 def delete_comment(id):
@@ -147,27 +155,33 @@ def delete_comment(id):
         if not comments.delete_comment(id):
             flash("Error")
             return render_template("post", id=id)
-        else:
-            flash("Comment Deleted") 
-            return redirect(url_for("post", id=comment_to_delete.post_id))
+
+        flash("Comment Deleted")
+        return redirect(url_for("post", id=comment_to_delete.post_id))
+
+    flash("Unauthorized Access")
+    return redirect(url_for('index'))
 
 @app.route("/dashboard")
 def dashboard():
-    try:
-        id = session["id"]
-        result = posts.get_user_posts(id)
-    except:
+    if not users.is_logged_in():
         result = False
         flash("You need to br logged in to view this page...")
+    else:
+        id = session["id"]
+        result = posts.get_user_posts(id)
+
     return render_template("dashboard.html", posts=result)
 
 @app.route("/dashboard/comments")
 def user_comments():
-    try:
+    if not users.is_logged_in():
+        result = False
+        flash("You need to br logged in to view this page...")
+    else:
         id = session["id"]
         result = comments.get_user_comments(id)
-    except:
-        result = False
+
     return render_template("dashboard_comments.html", comments=result)
 
 @app.route("/admin")
@@ -177,13 +191,14 @@ def admin():
     if not users.is_logged_in():
         flash("Please log in to view this page")
         return redirect(url_for("login"))
-    
+
     if session["role"] == "administrator":
         if form.validate_on_submit():
             searched = form.search.data
             result = users.get_searched_user(searched)
-            return redirect("search/users.html", form=form, searched=searched, users=result)
-    
+            count = len(result)
+            return render_template("search/users.html", form=form, count=count, searched=searched, users=result)
+
         result = users.get_users()
         return render_template("admin.html", users=result)
 
@@ -196,14 +211,15 @@ def admin_posts():
 
     if session["role"] == "administrator":
         result = posts.get_posts()
-        return render_template("admin_posts.html", posts=result)
-    
-    if session["role"] == "administrator":
+
         if form.validate_on_submit():
             searched = form.search.data
             result = posts.get_searched_posts_id(searched)
-            return redirect("search/posts.html", form=form, searched=searched, posts=result)
-    
+            count= len(result)
+            return render_template("search/posts.html", form=form, count=count, searched=searched, posts=result)
+        
+        return render_template("admin_posts.html", posts=result)
+      
     flash("Access Denied")
     return redirect(url_for("index"))
 
@@ -254,10 +270,10 @@ def sign_up():
         if not users.signup(username, email, password):
             flash("Error! Try Again")
             return render_template("sign_up.html", form=form)
-        else:
-            flash("Welcome! You are now logged in and ready to start posting.")
-            return redirect(url_for("dashboard"))
-    
+
+        flash("Welcome! You are now logged in and ready to start posting.")
+        return redirect(url_for("dashboard"))
+
     return render_template("sign_up.html", form=form)
 
 @app.route("/profile/<int:id>")
@@ -289,18 +305,18 @@ def edit_user(id):
         if not users.edit_user(id, username, email, bio):
             flash("Error")
             return redirect(url_for("dashboard"))
-        else:
-            flash("You information was updated")
-            return redirect(url_for("dashboard"))
-        
+
+        flash("You information was updated")
+        return redirect(url_for("dashboard"))
+
     if id == session["id"]:
         form.username.data = user.username
         form.email.data = user.email
         form.bio.data = user.bio
         return render_template("edit_user.html", form=form)
-    else:
-        flash("Unauthorized Access")
-        return redirect(url_for('index'))
+
+    flash("Unauthorized Access")
+    return redirect(url_for('index'))
 
 @app.route("/delete-user/<int:id>")
 def delete_user(id):
@@ -312,22 +328,25 @@ def delete_user(id):
             if session["role"] == "administrator":
                 return redirect(url_for("admin"))
             return redirect(url_for("dashboard"))
-        else:
-            flash("User deleted successfully") 
-            if session["role"] == "administrator":
-                return redirect(url_for("admin"))
-            return redirect(url_for("sign_up"))
+        flash("User deleted successfully")
+        if session["role"] == "administrator":
+            return redirect(url_for("admin"))
+        return redirect(url_for("sign_up"))
+
+    flash("Unauthorized Access")
+    return redirect(url_for('index'))
 
 @app.route("/follow/<int:id>")
 def follow(id):
     followed_id= id
+
     if not users.is_logged_in():
         flash('Please log in first')
         return redirect(url_for('login'))
-    else:
-        if not users.follow(followed_id):
-            flash("Error")
-            return redirect(url_for('profile', id=followed_id))
+
+    if not users.follow(followed_id):
+        flash("Error")
+        return redirect(url_for('profile', id=followed_id))
 
     return redirect(url_for('profile', id=followed_id))
 
@@ -338,21 +357,24 @@ def unfollow(id):
     if not users.is_logged_in():
         flash('Please log in first')
         return redirect(url_for('login'))
-    else:
-        if not users.unfollow(followed_id):
-            flash("Error")
-            return redirect(url_for('profile', id=followed_id))     
+
+    if not users.unfollow(followed_id):
+        flash("Error")
+        return redirect(url_for('profile', id=followed_id))
+
     return redirect(url_for('dashboard'))
 
 @app.route("/followed-accounts/<int:id>")
 def followed_accounts(id):
+
     if not users.is_logged_in():
         flash("Please log in to view this page")
         return redirect(url_for('login'))
-    if session["id"] == id:
-        accounts = users.followed_accounts(id)
-        post = posts.get_followed_posts(id)
-        return render_template("followed.html", accounts=accounts, posts=post)
-    else:
+    if session["id"] != id:
         flash("Unauthorized access")
-        return redirect(url_for('dashboard'))
+    else:
+        accounts = users.followed_accounts(id)
+        results = posts.get_followed_posts(id)
+        return render_template("followed.html", accounts=accounts, posts=results)
+
+    return redirect(url_for('dashboard'))

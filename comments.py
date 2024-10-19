@@ -1,9 +1,11 @@
 from datetime import datetime
+from flask import session
+from sqlalchemy.sql import text
 from app import app
 from db import db
-from sqlalchemy.sql import text
 
-def add_comment(content, author_id, post_id):
+def add_comment(content, post_id):
+    author_id = session["id"]
     date_added = datetime.now()
     try:   
         sql = """INSERT INTO comment (content, author_id, post_id, date_added)
