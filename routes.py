@@ -13,7 +13,7 @@ def index():
 @app.context_processor
 def base():
     form = SearchForm()
-    return dict(form=form)
+    return {"form": form}
 
 @app.route("/search", methods=["POST", "GET"])
 def search():
@@ -27,7 +27,7 @@ def search():
 
     return render_template("search.html", form=form, searched=searched,
         count=count, posts=result)
-    
+
 
 @app.route("/search/users", methods=["POST", "GET"])
 def search_users():
@@ -38,10 +38,9 @@ def search_users():
         searched = ""
     result = users.get_searched_user(searched)
     count= len(result)
+
     return render_template("search_users.html", form=form, searched=searched,
         count=count, users=result)
- 
-
 
 @app.route("/search/posts", methods=["POST", "GET"])
 def search_posts():
@@ -52,10 +51,9 @@ def search_posts():
         searched = ""
     result = posts.get_searched_posts_id(searched)
     count = len(result)
+
     return render_template("search_posts.html", form=form, searched=searched,
         count= count, posts=result)
-    
-
 
 @app.route("/add-post", methods=["GET", "POST"])
 def add_post():
@@ -197,7 +195,8 @@ def admin():
             searched = form.search.data
             result = users.get_searched_user(searched)
             count = len(result)
-            return render_template("search/users.html", form=form, count=count, searched=searched, users=result)
+            return render_template("search/users.html", form=form, count=count,
+                searched=searched, users=result)
 
         result = users.get_users()
         return render_template("admin.html", users=result)
@@ -216,10 +215,11 @@ def admin_posts():
             searched = form.search.data
             result = posts.get_searched_posts_id(searched)
             count= len(result)
-            return render_template("search/posts.html", form=form, count=count, searched=searched, posts=result)
-        
+            return render_template("search/posts.html", form=form, count=count,
+                searched=searched, posts=result)
+
         return render_template("admin_posts.html", posts=result)
-      
+
     flash("Access Denied")
     return redirect(url_for("index"))
 
@@ -285,8 +285,8 @@ def profile(id):
 @app.route("/profile/comments/<int:id>")
 def profile_comments(id):
     user = users.get_user(id)
-    user_comments = comments.get_user_comments(id)
-    return render_template("profile_comments.html", user=user, comments=user_comments)
+    results = comments.get_user_comments(id)
+    return render_template("profile_comments.html", user=user, comments=results)
 
 @app.route("/edit/<int:id>", methods=["GET", "POST"])
 def edit_user(id):

@@ -2,18 +2,18 @@
 
 {% block content %}
   {% include "message.html" %}<br/>
-    <h1 class="light-title">{{ session.sername }}'s Dashboar</h1><br/>
+    <h1 class="light-title">Dashboard</h1><br/>
 
     {% if session.username %}
       <div class="card">
+        <h5 class="card-header">Account Information</h5>
         <div class="card-body">
-          <h5 class="card-header">Account Information</h5>
           <p class="card-text">
             <p class="card-text"><strong>Username:</strong> {{ session.username }}</p>
             <p class="card-text"><strong>Email:</strong> {{ session.email }}</p>
             <p class="card-text"><strong>You have been a member scince:</strong> {{ session.date_added }}</p>
             <p class="card-text"><strong>Bio:</strong> {{ session.bio }}</p></br>
-            <a href="{{ url_for('edit_user', id=session.id )}}" class="btn btn-dark">Update Account Information</a>
+            <a href="{{ url_for('edit_user', id=session.id )}}" class="btn btn-dark">Edit Account</a>
         </div>
       </div><br/><br/><br/>
           <div class="btn-group">
