@@ -1,11 +1,12 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField
-from wtforms.validators import DataRequired, EqualTo, Length
+from wtforms import TextAreaField, StringField, SubmitField, PasswordField
+from wtforms.validators import DataRequired, EqualTo, Length, Email
 from wtforms.widgets import TextArea
 
 class SignUpForm(FlaskForm):
     username = StringField("Username", validators=[DataRequired(), Length(max=35)])
-    email = StringField("Email", validators=[DataRequired(), Length(max=200)])
+    email = StringField("Email", validators=[DataRequired(),
+        Email(message="Please enter a valid email address"), Length(max=200)])
     password = PasswordField("Password", validators=[DataRequired(), Length(max=300),
         EqualTo('confirm_password', message="Passwords do not match")])
     confirm_password = PasswordField("Confirm Password", validators=[DataRequired()])
@@ -14,7 +15,7 @@ class SignUpForm(FlaskForm):
 class EditUserForm(FlaskForm):
     username = StringField("Username", validators=[DataRequired(), Length(max=35)])
     email = StringField("Email", validators=[DataRequired(), Length(max=200)])
-    bio = StringField("Bio", widget=TextArea(), validators=[Length(max=500)])
+    bio = TextAreaField("Bio", validators=[Length(max=500)])
     submit = SubmitField("Submit")
 
 class LoginForm(FlaskForm):

@@ -62,7 +62,7 @@ def add_post():
     if form.validate_on_submit():
         if users.is_logged_in():
             title = form.title.data
-            content = form.title.data
+            content = form.content.data
             form.title.data = ""
             form.content.data = ""
 
@@ -261,6 +261,7 @@ def sign_up():
         username = form.username.data
         email = form.email.data
         password = form.password.data
+        password2 = form.confirm_password.data
 
         form.username.data = ""
         form.email.data = ""
@@ -268,6 +269,9 @@ def sign_up():
 
         if not users.check_email(email):
             flash("Email already in use")
+            return render_template("sign_up.html", form=form)
+        if not password == password2:
+            flash("Passwords do not match")
             return render_template("sign_up.html", form=form)
         if not users.signup(username, email, password):
             flash("Error! Try Again")

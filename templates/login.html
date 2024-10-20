@@ -3,7 +3,6 @@
 {% block content %}
     {% include "message.html" %}
 
-
     <br/><br/>
         <div class="modal-content rounded-4 shadow">
             <div class="modal-header p-5 pb-4 border-bottom-0">
@@ -14,7 +13,6 @@
               <form method="POST">
                 {{ form.hidden_tag() }}
 
-                <!--<div class="form-floating mb-3">-->
                 <div class="form mb-3">
                     {{ form.email.label(class="form-label")}}
                     {{ form.email(class="form-control") }}
