@@ -4,9 +4,9 @@
   {% include "message.html" %}<br/><br/>
 
   <div class="btn-group">
-    <a href="{{ url_for('index') }}" class="btn btn-light active">All Posts</a>
+    <a href="{{ url_for('index') }}" class="btn btn-light">All Posts</a>
     {% if session.id %}
-      <a href="{{ url_for('followed_accounts', id=session.id) }}" class="btn btn-light">Accounts you follow</a>
+      <a href="{{ url_for('followed_accounts', id=session.id) }}" class="btn btn-light active">Accounts you follow</a>
     {% else %}
       <a href="{{ url_for('login') }}" class="btn btn-light">Accounts you follow</a>
     {% endif %}
@@ -51,7 +51,7 @@
                     <tbody class="table-group-divider">
                         {% for account in accounts %}
                             <tr>
-                                <td>{{ account.username }}</td>
+                                <td><a href="{{ url_for('profile', id=account.id) }}" class="text-dark text-decoration-none">{{ account.username }}</a></td>
                                 <td class="text-end">
                                     <a href="{{ url_for('unfollow', id=account.id) }}" class="btn btn-danger"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-dash" viewBox="0 0 16 16">
                                     <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7M11 12h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1 0-1m0-7a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4"></path>
