@@ -10,20 +10,15 @@
             <div class="modal-body p-5 pt-0">
               <form method="POST">
                 {{ form.hidden_tag() }}
-
-                <!--<div class="form-floating mb-3">-->
                 <div class="form mb-3">
                     {{ form.title.label(class="form-label")}}
                     {{ form.title(class="form-control") }}
                 </div>
                 <div class="form mb-3">
-                    
                     {{ form.content.label(class="form-label")}}
                     {{ form.content(class="form-control") }}
                 </div><br/>
-
-                {{ form.submit(class="w-100 mb-2 btn btn-lg rounded-3 btn-dark") }}
-                
+                {{ form.submit(class="w-100 mb-2 btn btn-lg rounded-3 btn-dark") }}   
               </form>
             </div>
         </div>

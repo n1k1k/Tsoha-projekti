@@ -12,12 +12,10 @@
         <div class="modal-body p-5 pt-0">
           <form method="POST">
             {{ form.hidden_tag() }}
-
             <div class="form mb-3">
               {{ form.username.label(class="form-label") }}
               {{ form.username(class="form-control") }}
             </div>
-
             <div class="form mb-3">
                 {{ form.email.label(class="form-label")}}
                 {{ form.email(class="form-control") }}
@@ -36,7 +34,6 @@
             <div class="text-center">
             {{ form.submit(class="w-40 mb-2 btn btn-lg rounded-3 btn-dark") }}
             </div>
-            <small class="text-body-secondary">By clicking Sign up, you agree to the terms of use.</small>
           </form>
         </div>
     </div>
