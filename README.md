@@ -20,7 +20,7 @@ Sovelluksen ominaisuuksia:
 - Ylläpitäjä voi hakea käyttäjiä käyttäjänimellä tai id-numerolla.
 - Ylläpitäjä voi hakea viestiketjuja ketjun id-numerolla.
 
-## Asennus
+## Käynnistäminen paikallisesti
 
 Kloonaa repositorio ja lue sen juurikansioon .env-tiedosto ja määritä sen sisältö seuraavanlaiseksi:
 
