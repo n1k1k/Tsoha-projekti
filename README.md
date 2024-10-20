@@ -7,15 +7,16 @@ Sovelluksen ominaisuuksia:
 - Käyttäjä voi kirjautua sisään ja ulos sekä luoda uuden tunnuksen.
 - Käyttäjä voi muokata tilinsä tietoja.
 - Käyttäjä voi seurata muita käyttäjiä.
+- Jokaisella käyttäjällä on julkinen profiili, jonka toiset käyttäjät näkevät.
 - Käyttäjä näkee sovelluksen etusivulla listan viestiketjuista niin, että uusin viestiketju on ensimmäisenä.
-- Käyttäjä voi suodattaa viestiketjuja niin, että hän näkee vain seuraamiensa käyttäjien luomat viestiketjut.
+- Käyttäjä voi suodattaa viestiketjuja niin, että hän näkee vain seuraamiensa käyttäjien aloittamat viestiketjut.
 - Käyttäjä voi luoda uuden viestiketjun antamalla sille otsikon ja viestin sisällön. 
 - Käyttäjä voi kirjoittaa uuden kommentin olemassa olevaan viestiketjuun.
-- Käyttäjä voi poistaa itse tekemänsä viestiketjun ja muokata sen sisältöä.
+- Käyttäjä voi poistaa itse tekemänsä viestiketjun tai muokata sen sisältöä.
 - Käyttäjä voi poistaa itse tekemänsä kommentin.
 - Käyttäjä voi etsiä kaikki viestit, joiden osana on annettu sana.
 - Ylläpitäjä voi poistaa käyttäjiä.
-- Ylläpitäjä voi poistaa viestiketjuja.
+- Ylläpitäjä voi poistaa viestiketjuja ja kommentteja.
 - Ylläpitäjä voi hakea käyttäjiä käyttäjänimellä tai id-numerolla.
 - Ylläpitäjä voi hakea viestiketjuja ketjun id-numerolla.
 
