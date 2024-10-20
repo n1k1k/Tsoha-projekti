@@ -1,3 +1,5 @@
+Tässä repositoriossa on Helsingin Yliopiston kurssia **TKT20019 Tietokannat ja web-ohjelmointi** varten tehty harjoitustyö.
+
 ## Keskustelufoorumisovellus
 
 Sovelluksessa on viestiketjuja, jotka muodostuvat alkuperäisestä viestistä ja kommenteista. Jokainen käyttäjä on peruskäyttäjä tai ylläpitäjä.
